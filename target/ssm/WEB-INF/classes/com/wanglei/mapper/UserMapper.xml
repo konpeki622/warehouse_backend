@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wanglei.mapper.UserMapper">
+
+    <select id="findByUsername" resultType="User" parameterType="String">
+        select * from userinfo where username = #{username};
+    </select>
+
+    <insert id="insertUser" parameterType="User">
+        insert into userinfo (username, password, auth) values (#{username}, #{password}, #{auth});
+    </insert>
+
+    <update id="updatePassword" parameterType="User">
+        update userinfo set password = #{password} where username = #{username};
+    </update>
+
+</mapper>

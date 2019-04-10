@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wanglei.mapper.GoodsMapper">
+    <select id="getGoodsAll" resultType="Goods" >
+	    SELECT *
+	    FROM warehouse_view;
+	</select>
+
+	<select id="getAccountAll" resultType="Goods" >
+	    SELECT *
+	    FROM account INNER JOIN warehouse_view
+	    WHERE account.goods_id = warehouse_view.id;
+	</select>
+
+    <select id="getStoreAll" resultType="Goods" >
+	    SELECT *
+	    FROM account INNER JOIN warehouse_view
+	    WHERE account.goods_id = warehouse_view.id AND account.behavior = 0;
+	</select>
+
+    <select id="getDeliverAll" resultType="Goods" >
+	    SELECT *
+	    FROM account INNER JOIN warehouse_view
+	    WHERE account.goods_id = warehouse_view.id AND account.behavior = 1;
+	</select>
+
+	<select id="getGoodsByKeywords" parameterType="String" resultType="Goods" >
+		SELECT *
+	    FROM warehouse_view
+		<if test='keywords != null'>
+			WHERE
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				id LIKE concat('%',#{item},'%')
+			</foreach>
+			OR
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				material_name LIKE concat('%',#{item},'%')
+			</foreach>
+			OR
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				area_name LIKE concat('%',#{item},'%')
+			</foreach>
+		</if>
+	</select>
+
+    <select id="getGoodsByMaterial" parameterType="String" resultType="Goods" >
+	    SELECT *
+	    FROM warehouse_view
+		<if test='keywords != null'>
+			WHERE
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				material_name LIKE concat('%',#{item},'%')
+			</foreach>
+		</if>
+	</select>
+
+    <select id="getGoodsByArea" parameterType="String" resultType="Goods" >
+	    SELECT *
+	    FROM warehouse_view
+		<if test='keywords != null'>
+			WHERE
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				area_name LIKE concat('%',#{item},'%')
+			</foreach>
+		</if>
+	</select>
+
+	<select id="getAccountByGoods" parameterType="Integer" resultType="Goods">
+        SELECT *
+        FROM account INNER JOIN warehouse_view
+	    WHERE account.goods_id = warehouse_view.id AND warehouse_view.id = #{goodsId};
+    </select>
+
+    <select id="getStoreByGoods" parameterType="Integer" resultType="Goods">
+        SELECT *
+        FROM account INNER JOIN warehouse_view
+	    WHERE account.goods_id = warehouse_view.id AND warehouse_view.id = #{goodsId} AND account.behavior = 0;
+    </select>
+
+    <select id="getDeliverByGoods" parameterType="Integer" resultType="Goods">
+        SELECT *
+        FROM account INNER JOIN warehouse_view
+	    WHERE account.goods_id = warehouse_view.id AND warehouse_view.id = #{goodsId} AND account.behavior = 1;
+    </select>
+
+	<select id="getId" resultType="Integer">
+		SELECT IFNULL(id, - 1) AS result
+		FROM warehouse_view
+		WHERE material_id = #{material_id} AND area_id = #{area_id};
+	</select>
+
+	<insert id="insertGoods" parameterType="AddGoods">
+        insert into warehouse (material_id, material_size, area_id) values (#{material_id}, #{update_size},#{area_id});
+    </insert>
+
+	<insert id="insertAccount" parameterType="AddGoods">
+       insert into account (goods_id, update_date, deliver_owner, update_size, behavior, username) values (#{goods_id}, #{update_date}, #{deliver_owner}, #{update_size}, #{behavior}, #{username});
+    </insert>
+
+	<update id="updateAccount" parameterType="AddGoods">
+		<if test='behavior == 0'>
+			UPDATE warehouse SET material_size = material_size + #{update_size} WHERE id = #{goods_id};
+		</if>
+		<if test="behavior == 1">
+			UPDATE warehouse SET material_size = material_size - #{update_size} WHERE id = #{goods_id};
+		</if>
+    </update>
+
+	<select id="getAccountToday" parameterType="Integer" resultType="Goods">
+		SELECT * FROM account INNER JOIN warehouse_view
+	    WHERE account.goods_id = warehouse_view.id AND to_days(update_date) = to_days(now())
+		<if test='goods_id != 0'>
+			AND account.goods_id = #{goodsId}
+		</if>
+	</select>
+
+	<select id="getAccountYesterday" parameterType="Integer"  resultType="Goods">
+		SELECT * FROM account INNER JOIN warehouse_view
+	    WHERE account.goods_id = warehouse_view.id AND TO_DAYS( NOW( ) ) - TO_DAYS(update_date) &lt;= 1
+		<if test='goods_id != 0'>
+			AND account.goods_id = #{goodsId}
+		</if>
+	</select>
+
+	<select id="getAccountThisWeek" parameterType="Integer"  resultType="Goods">
+		SELECT * FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(update_date)
+		<if test='goods_id != 0'>
+			AND account.goods_id = #{goodsId}
+		</if>
+	</select>
+
+	<select id="getAccountByMonth" resultType="Goods">
+		SELECT * FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( update_date, '%Y%m' ) ) =#{month}
+		<if test='goods_id != 0'>
+			AND account.goods_id = #{goods_id}
+		</if>
+	</select>
+
+	<select id="getAccountBySeason" resultType="Goods">
+		SELECT * FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND QUARTER(update_date)=QUARTER(DATE_SUB(now(),interval #{season} QUARTER))
+		<if test='goods_id != 0'>
+			AND account.goods_id = #{goods_id}
+		</if>
+	</select>
+
+	<select id="getAccountByYear" resultType="Goods">
+		SELECT * FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND YEAR(update_date)=YEAR(date_sub(now(),interval #{year} year))
+		<if test='goods_id != 0'>
+			AND account.goods_id = #{goods_id}
+		</if>
+	</select>
+
+</mapper>

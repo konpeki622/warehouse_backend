@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wanglei.mapper.HistoryMapper">
+    <select id="getUpdateHistoryList" resultType="UpdateHistory" >
+	        SELECT *
+	        FROM history
+	</select>
+
+    <insert id="insertUpdateHistory" parameterType="UpdateHistory">
+        insert into history (update_date, username, behavior, goods_id) values (#{update_date}, #{username}, #{behavior}, #{goods_id});
+        <selectKey resultType="Integer" keyProperty="id" order="AFTER">
+            select @@IDENTITY
+        </selectKey>
+    </insert>
+</mapper>

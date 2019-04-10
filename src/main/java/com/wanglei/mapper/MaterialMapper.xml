@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wanglei.mapper.MaterialMapper">
+    <select id="getMaterialList" resultType="Material" >
+	        select * from material
+	</select>
+
+    <select id="getMaterialByKeywords" parameterType="String" resultType="Material" >
+        SELECT *
+        FROM material
+        <if test='keywords != null'>
+            WHERE
+            <foreach collection='keywords' item='item' index='index' separator=' OR '>
+                material_name LIKE concat('%',#{item},'%')
+            </foreach>
+        </if>
+    </select>
+
+    <insert id="insertMaterial" parameterType="String" keyProperty="material_id" useGeneratedKeys="true">
+        insert into material (material_name) values (#{material_name});
+        <selectKey resultType="Integer" keyProperty="material_id" order="AFTER">
+            select @@IDENTITY
+        </selectKey>
+    </insert>
+
+    <delete id="deleteMaterial" parameterType="Integer">
+        delete from material where material_id = #{material_id};
+    </delete>
+
+    <update id="updateMaterial">
+        update material set material_name = #{material_name} where material_id = #{material_id};
+    </update>
+</mapper>

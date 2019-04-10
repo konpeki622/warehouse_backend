@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wanglei.mapper.PrintMapper">
+    <select id="getPrintHistoryList" resultType="PrintHistory" >
+	        SELECT *
+	        FROM print
+	</select>
+
+    <insert id="insertPrintHistory" parameterType="PrintHistory">
+        insert into print (print_date, username, behavior, goods_id) values (#{print_date}, #{username}, #{behavior}, #{goods_id});
+        <selectKey resultType="Integer" keyProperty="id" order="AFTER">
+            select @@IDENTITY
+        </selectKey>
+    </insert>
+</mapper>
