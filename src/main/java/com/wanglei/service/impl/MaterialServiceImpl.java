@@ -14,8 +14,8 @@ public class MaterialServiceImpl implements MaterialService {
     private MaterialMapper materialMapper;
 
     @Override
-    public List<Material> getMaterialList(String[] keywords){
-        if (keywords.length == 0) {
+    public List<Material> getMaterialList(Integer type, String[] keywords){
+        if (type == 0) {
             return materialMapper.getMaterialList();
         }
         else {

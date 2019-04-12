@@ -52,8 +52,11 @@ public class UserController {
     @CheckToken
     @RequestMapping(value = {"/password"}, method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity passwordController(@RequestBody User user){
-        if(userService.updatePassword(user)){
+    public ResponseEntity passwordController(@RequestParam(value = "username") String username, @RequestParam(value = "oldPassword") String oldPassword, @RequestParam(value = "newPassword") String newPassword){
+        if(userService.updatePassword(username, oldPassword, newPassword) == -1){
+            return ResponseEntity.status(205).body(new ResponseMessage<>(null).error(205,"invalid password"));
+        }
+        else if (userService.updatePassword(username, oldPassword, newPassword) == 1) {
             return ResponseEntity.status(200).body(new ResponseMessage<>(null).success());
         }
         return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"failed to update password!"));

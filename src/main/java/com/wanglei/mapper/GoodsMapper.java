@@ -16,7 +16,7 @@ public interface GoodsMapper {
     List<Goods> getDeliverAll();
     List<Goods> getGoodsByKeywords(@Param("keywords") String[] keywords);
     List<Goods> getGoodsByMaterial(@Param("keywords") String[] keywords);
-    // TODO: 根据日期筛选
+
     List<Goods> getAccountToday(@Param("goods_id")Integer goodsId);
     List<Goods> getAccountYesterday(@Param("goods_id")Integer goodsId);
     List<Goods> getAccountThisWeek(@Param("goods_id")Integer goodsId);
@@ -28,8 +28,10 @@ public interface GoodsMapper {
     List<Goods> getAccountByGoods(Integer goodsId);
     List<Goods> getStoreByGoods(Integer goodsId);
     List<Goods> getDeliverByGoods(Integer goodsId);
-    int getId(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId);
-    void insertGoods(AddGoods goods);
-    void insertAccount(AddGoods goods);
-    void updateAccount(AddGoods goods);
+    Integer isExist(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId);
+    Integer getId(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId);
+    void insertGoods(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId, @Param("update_size")Integer updateSize);
+    void deleteGoods(Integer goodsId);
+    void insertAccount(@Param("goods_id")Integer goodsId, @Param("update_date")String updateDate, @Param("deliver_owner")String deliverOwner, @Param("update_size")Integer updateSize, @Param("behavior")Integer behavior, @Param("username")String username);
+    void updateAccount(@Param("behavior")Integer behavior, @Param("update_size")Integer updateSize, @Param("goods_id")Integer goodsId);
 }

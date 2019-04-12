@@ -6,14 +6,13 @@ import com.wanglei.service.PrintService;
 import com.wanglei.util.CheckToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
 public class PrintController {
+
     @Autowired
     private PrintService printService;
 
@@ -28,7 +27,9 @@ public class PrintController {
     @RequestMapping(value = {"/print/add"}, method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity printAddController(@RequestBody PrintHistory printHistory){
-        printService.insertPrintHistory(printHistory);
-        return ResponseEntity.status(200).body(new ResponseMessage<>(null).success());
+        if(printService.insertPrintHistory(printHistory)){
+            return ResponseEntity.status(200).body(new ResponseMessage<>(null).success());
+        }
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"failed to update goods!"));
     }
 }

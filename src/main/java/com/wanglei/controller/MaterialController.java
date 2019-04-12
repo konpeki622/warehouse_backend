@@ -18,8 +18,8 @@ public class MaterialController {
 
     @CheckToken
     @RequestMapping(value = {"/material"}, method = RequestMethod.GET)
-    public ResponseMessage materialController(@RequestParam(value = "keywords",required = false) String[] keywords){
-        List<Material> materials = materialService.getMaterialList(keywords);
+    public ResponseMessage materialController(@RequestParam(value = "type", defaultValue = "0") Integer type, @RequestParam(value = "keywords",required = false) String[] keywords){
+        List<Material> materials = materialService.getMaterialList(type, keywords);
         return new ResponseMessage<>(materials).success();
     }
 

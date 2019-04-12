@@ -15,7 +15,7 @@ public class AddGoods {
     private Integer area_id;
     // 记录变更信息
     @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
-    private Date update_date;
+    private String update_date;
     private Integer goods_id;
     private String deliver_owner;
     private Integer update_size;
@@ -50,11 +50,11 @@ public class AddGoods {
     }
 
     @JsonProperty(value = "update_date")
-    public Date getUpdateDate() {
+    public String getUpdateDate() {
         return update_date;
     }
 
-    public void setUpdateDate(Date update_date) { this.update_date = update_date; }
+    public void setUpdateDate(String update_date) { this.update_date = update_date; }
 
     @JsonProperty(value = "goods_id")
     public Integer getGoodsId() {

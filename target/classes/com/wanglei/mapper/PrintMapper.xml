@@ -11,8 +11,5 @@
 
     <insert id="insertPrintHistory" parameterType="PrintHistory">
         insert into print (print_date, username, behavior, goods_id) values (#{print_date}, #{username}, #{behavior}, #{goods_id});
-        <selectKey resultType="Integer" keyProperty="id" order="AFTER">
-            select @@IDENTITY
-        </selectKey>
     </insert>
 </mapper>

@@ -7,5 +7,5 @@ public interface UserService {
     //检验用户登录
     User findUserByName(String username);
     boolean register(User user);
-    boolean updatePassword(User user);
+    Integer updatePassword(String username, String oldPassword, String newPassword);
 }

@@ -27,9 +27,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updatePassword(User user) {
-        if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) return false;
-        userMapper.updatePassword(user);
-        return true;
+    public Integer updatePassword(String username, String oldPassword, String newPassword) {
+        if (!findUserByName(username).getPassword().equals(oldPassword)) return -1;
+        else {
+            userMapper.updatePassword(username, newPassword);
+            return 1;
+        }
     }
 }

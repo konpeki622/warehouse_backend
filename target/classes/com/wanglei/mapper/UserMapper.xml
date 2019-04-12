@@ -13,7 +13,7 @@
         insert into userinfo (username, password, auth) values (#{username}, #{password}, #{auth});
     </insert>
 
-    <update id="updatePassword" parameterType="User">
+    <update id="updatePassword">
         update userinfo set password = #{password} where username = #{username};
     </update>
 

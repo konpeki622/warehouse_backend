@@ -11,5 +11,6 @@ public interface GoodsService {
     List<Goods> getStoreList(Integer type, Integer goodsId);
     List<Goods> getDeliverList(Integer type, Integer goodsId);
     List<Goods> getAccountByDate(Integer type, Integer goodsId, Integer condition);
-    boolean updateGoods(Integer goodsId, AddGoods goods);
+    boolean updateGoods(Integer materialId, Integer areaId, Integer goodsId, String updateDate, String deliverOwner, Integer updateSize, Integer behavior, String username);
+    boolean deleteGoods(Integer goodsId);
 }

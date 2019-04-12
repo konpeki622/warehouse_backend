@@ -57,17 +57,27 @@ public class GoodsServiceImpl implements GoodsService {
         }
     }
 
+    // 不可用
     @Override
-    public boolean updateGoods(Integer goodsId, AddGoods goods) {
+    public boolean updateGoods(Integer materialId, Integer areaId, Integer goodsId, String updateDate, String deliverOwner, Integer updateSize, Integer behavior, String username) {
         try {
             if (goodsId == 0) {
-                if (goodsMapper.getId(goods.getMaterialId(), goods.getAreaId()) == -1) {
-                    goodsMapper.insertGoods(goods);
-                    goods.setGoodsId(goodsMapper.getId(goods.getMaterialId(), goods.getAreaId()));
+                if (goodsMapper.isExist(materialId, areaId) == 0) {
+                    goodsMapper.insertGoods(materialId, areaId, updateSize);
+                    goodsId = goodsMapper.getId(materialId, areaId);
+                    goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username);
                 }
+                else {
+                    goodsId = goodsMapper.getId(materialId, areaId);
+                    goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username);
+                    goodsMapper.updateAccount(behavior, updateSize, goodsId);
+                }
+
             }
-            goodsMapper.insertAccount(goods);
-            goodsMapper.updateAccount(goods);
+            else {
+                goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username);
+                goodsMapper.updateAccount(behavior, updateSize, goodsId);
+            }
             return true;
         }
         catch (Error e) {
@@ -86,5 +96,11 @@ public class GoodsServiceImpl implements GoodsService {
             case 5: return goodsMapper.getAccountByYear(goodsId, condition);
             default: return null;
         }
+    }
+
+    @Override
+    public boolean deleteGoods(Integer goodsId) {
+        goodsMapper.deleteGoods(goodsId);
+        return true;
     }
 }

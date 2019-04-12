@@ -8,7 +8,7 @@ import java.util.Date;
 public class PrintHistory {
     private Integer id;
     @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
-    private Date print_date;
+    private String print_date;
     private String username;
     private Integer behavior;
     private Integer goods_id;
@@ -22,10 +22,10 @@ public class PrintHistory {
     }
 
     @JsonProperty(value = "print_date")
-    public Date getPrintDate() {
+    public String getPrintDate() {
         return print_date;
     }
-    public void setPrintDate(Date print_date) {
+    public void setPrintDate(String print_date) {
         this.print_date = print_date;
     }
 

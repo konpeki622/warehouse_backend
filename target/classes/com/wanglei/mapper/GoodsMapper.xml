@@ -86,21 +86,31 @@
 	    WHERE account.goods_id = warehouse_view.id AND warehouse_view.id = #{goodsId} AND account.behavior = 1;
     </select>
 
-	<select id="getId" resultType="Integer">
-		SELECT IFNULL(id, - 1) AS result
+	<select id="isExist" resultType="Integer">
+		SELECT COUNT(*) AS result
 		FROM warehouse_view
 		WHERE material_id = #{material_id} AND area_id = #{area_id};
 	</select>
 
-	<insert id="insertGoods" parameterType="AddGoods">
+	<select id="getId" resultType="Integer">
+		SELECT id AS result
+		FROM warehouse_view
+		WHERE material_id = #{material_id} AND area_id = #{area_id};
+	</select>
+
+	<insert id="insertGoods">
         insert into warehouse (material_id, material_size, area_id) values (#{material_id}, #{update_size},#{area_id});
     </insert>
 
-	<insert id="insertAccount" parameterType="AddGoods">
+	<delete id="deleteGoods" parameterType="Integer">
+        delete from warehouse where id = #{goodsId};
+    </delete>
+
+	<insert id="insertAccount">
        insert into account (goods_id, update_date, deliver_owner, update_size, behavior, username) values (#{goods_id}, #{update_date}, #{deliver_owner}, #{update_size}, #{behavior}, #{username});
     </insert>
 
-	<update id="updateAccount" parameterType="AddGoods">
+	<update id="updateAccount">
 		<if test='behavior == 0'>
 			UPDATE warehouse SET material_size = material_size + #{update_size} WHERE id = #{goods_id};
 		</if>
@@ -113,7 +123,7 @@
 		SELECT * FROM account INNER JOIN warehouse_view
 	    WHERE account.goods_id = warehouse_view.id AND to_days(update_date) = to_days(now())
 		<if test='goods_id != 0'>
-			AND account.goods_id = #{goodsId}
+			AND account.goods_id = #{goodsId};
 		</if>
 	</select>
 
@@ -121,7 +131,7 @@
 		SELECT * FROM account INNER JOIN warehouse_view
 	    WHERE account.goods_id = warehouse_view.id AND TO_DAYS( NOW( ) ) - TO_DAYS(update_date) &lt;= 1
 		<if test='goods_id != 0'>
-			AND account.goods_id = #{goodsId}
+			AND account.goods_id = #{goodsId};
 		</if>
 	</select>
 
@@ -129,7 +139,7 @@
 		SELECT * FROM account INNER JOIN warehouse_view
 		WHERE account.goods_id = warehouse_view.id AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(update_date)
 		<if test='goods_id != 0'>
-			AND account.goods_id = #{goodsId}
+			AND account.goods_id = #{goodsId};
 		</if>
 	</select>
 
@@ -139,13 +149,14 @@
 		<if test='goods_id != 0'>
 			AND account.goods_id = #{goods_id}
 		</if>
+		ORDER BY account.update_date;
 	</select>
 
 	<select id="getAccountBySeason" resultType="Goods">
 		SELECT * FROM account INNER JOIN warehouse_view
 		WHERE account.goods_id = warehouse_view.id AND QUARTER(update_date)=QUARTER(DATE_SUB(now(),interval #{season} QUARTER))
 		<if test='goods_id != 0'>
-			AND account.goods_id = #{goods_id}
+			AND account.goods_id = #{goods_id};
 		</if>
 	</select>
 
@@ -155,6 +166,7 @@
 		<if test='goods_id != 0'>
 			AND account.goods_id = #{goods_id}
 		</if>
+		ORDER BY account.update_date;
 	</select>
 
 </mapper>

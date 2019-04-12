@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface PrintService {
     List<PrintHistory> getPrintHistoryList();
-    void insertPrintHistory(PrintHistory printHistory);
+    boolean insertPrintHistory(PrintHistory printHistory);
 }

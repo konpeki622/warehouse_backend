@@ -5,14 +5,19 @@
 
 <mapper namespace="com.wanglei.mapper.MaterialMapper">
     <select id="getMaterialList" resultType="Material" >
-	        select * from material
+	        select * from material order by material_id;
 	</select>
 
     <select id="getMaterialByKeywords" parameterType="String" resultType="Material" >
-	        SELECT *
-	        FROM material
-	        WHERE material_name LIKE CONCAT('%', #{keywords}, '%');
-	</select>
+        SELECT *
+        FROM material
+        <if test='keywords != null'>
+            WHERE
+            <foreach collection='keywords' item='item' index='index' separator=' OR '>
+                material_name LIKE concat('%',#{item},'%')
+            </foreach>
+        </if>
+    </select>
 
     <insert id="insertMaterial" parameterType="String" keyProperty="material_id" useGeneratedKeys="true">
         insert into material (material_name) values (#{material_name});
