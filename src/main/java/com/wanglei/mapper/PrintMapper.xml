@@ -5,8 +5,9 @@
 
 <mapper namespace="com.wanglei.mapper.PrintMapper">
     <select id="getPrintHistoryList" resultType="PrintHistory" >
-	        SELECT *
-	        FROM print
+	        SELECT print.id, print_date, username, print_behavior.behavior as behavior_name, goods_id
+	        FROM print inner join print_behavior
+	        where print.behavior = print_behavior.id
 	</select>
 
     <insert id="insertPrintHistory" parameterType="PrintHistory">

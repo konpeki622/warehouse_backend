@@ -11,6 +11,7 @@ public class PrintHistory {
     private String print_date;
     private String username;
     private Integer behavior;
+    private String behavior_name;
     private Integer goods_id;
 
     @JsonProperty(value = "id")
@@ -36,6 +37,10 @@ public class PrintHistory {
     @JsonProperty(value = "behavior")
     public Integer getBehavior() {return behavior; }
     public void setBehavior(Integer behavior) { this.behavior = behavior; }
+
+    @JsonProperty(value = "behavior_name")
+    public String getBehaviorName() {return behavior_name; }
+    public void setBehaviorName(String behavior_name) { this.behavior_name = behavior_name; }
 
     @JsonProperty(value = "goods_id")
     public Integer getGoodsId() { return goods_id;}
