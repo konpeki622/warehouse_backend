@@ -17,6 +17,7 @@
                 material_name LIKE concat('%',#{item},'%')
             </foreach>
         </if>
+        ORDER BY material_id;
     </select>
 
     <insert id="insertMaterial" parameterType="String" keyProperty="material_id" useGeneratedKeys="true">

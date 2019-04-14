@@ -23,7 +23,6 @@ public class MaterialController {
         return new ResponseMessage<>(materials).success();
     }
 
-    @CheckToken
     @RequestMapping(value = {"/material/add"}, method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity materialAddController(@RequestParam(value = "material_name") String materialName){
@@ -33,7 +32,6 @@ public class MaterialController {
         return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"failed to add!"));
     }
 
-    @CheckToken
     @RequestMapping(value = {"/material/delete"}, method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity materialDeleteController(@RequestParam(value = "material_id") Integer materialId){
@@ -46,7 +44,6 @@ public class MaterialController {
         }
     }
 
-    @CheckToken
     @RequestMapping(value = {"/material/update"}, method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity materialUpdateController(@RequestParam(value = "material_id") Integer materialId, @RequestParam(value = "newName") String newName){

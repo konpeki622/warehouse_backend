@@ -17,6 +17,8 @@ public interface GoodsMapper {
     List<Goods> getGoodsByKeywords(@Param("keywords") String[] keywords);
     List<Goods> getGoodsByMaterial(@Param("keywords") String[] keywords);
 
+    List<Goods> getAccountByKeywords(@Param("keywords") String[] keywords);
+
     List<Goods> getAccountToday(@Param("goods_id")Integer goodsId);
     List<Goods> getAccountYesterday(@Param("goods_id")Integer goodsId);
     List<Goods> getAccountThisWeek(@Param("goods_id")Integer goodsId);

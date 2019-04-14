@@ -14,9 +14,15 @@ public class PrintServiceImpl implements PrintService {
     PrintMapper printMapper;
 
     @Override
-    public List<PrintHistory> getPrintHistoryList() {
-        return printMapper.getPrintHistoryList();
+    public List<PrintHistory> getPrintHistoryList(Integer type, String[] keywords) {
+        if (type == 0) {
+            return printMapper.getPrintHistoryList();
+        }
+        else {
+            return printMapper.getPrintListByKeywords(keywords);
+        }
     }
+
 
     @Override
     public boolean insertPrintHistory(PrintHistory printHistory){

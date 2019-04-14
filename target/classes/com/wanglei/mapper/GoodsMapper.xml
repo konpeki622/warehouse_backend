@@ -6,25 +6,29 @@
 <mapper namespace="com.wanglei.mapper.GoodsMapper">
     <select id="getGoodsAll" resultType="Goods" >
 	    SELECT *
-	    FROM warehouse_view;
+	    FROM warehouse_view
+	    ORDER BY id;
 	</select>
 
 	<select id="getAccountAll" resultType="Goods" >
 	    SELECT *
 	    FROM account INNER JOIN warehouse_view
-	    WHERE account.goods_id = warehouse_view.id;
+	    WHERE account.goods_id = warehouse_view.id
+	    ORDER BY update_date DESC;
 	</select>
 
     <select id="getStoreAll" resultType="Goods" >
 	    SELECT *
 	    FROM account INNER JOIN warehouse_view
-	    WHERE account.goods_id = warehouse_view.id AND account.behavior = 0;
+	    WHERE account.goods_id = warehouse_view.id AND account.behavior = 0
+	    ORDER BY update_date DESC;
 	</select>
 
     <select id="getDeliverAll" resultType="Goods" >
 	    SELECT *
 	    FROM account INNER JOIN warehouse_view
-	    WHERE account.goods_id = warehouse_view.id AND account.behavior = 1;
+	    WHERE account.goods_id = warehouse_view.id AND account.behavior = 1
+	    ORDER BY update_date DESC;
 	</select>
 
 	<select id="getGoodsByKeywords" parameterType="String" resultType="Goods" >
@@ -44,6 +48,24 @@
 				area_name LIKE concat('%',#{item},'%')
 			</foreach>
 		</if>
+		ORDER BY id;
+	</select>
+
+	<select id="getAccountByKeywords" parameterType="String" resultType="Goods" >
+		SELECT *
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id
+		<if test='keywords != null'>
+			AND
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				username LIKE concat('%',#{item},'%')
+			</foreach>
+			OR
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				goods_id LIKE concat('%',#{item},'%')
+			</foreach>
+		</if>
+		ORDER BY update_date DESC;
 	</select>
 
     <select id="getGoodsByMaterial" parameterType="String" resultType="Goods" >
@@ -55,6 +77,7 @@
 				material_name LIKE concat('%',#{item},'%')
 			</foreach>
 		</if>
+		ORDER BY id;
 	</select>
 
     <select id="getGoodsByArea" parameterType="String" resultType="Goods" >
@@ -66,24 +89,28 @@
 				area_name LIKE concat('%',#{item},'%')
 			</foreach>
 		</if>
+		ORDER BY id;
 	</select>
 
 	<select id="getAccountByGoods" parameterType="Integer" resultType="Goods">
         SELECT *
         FROM account INNER JOIN warehouse_view
-	    WHERE account.goods_id = warehouse_view.id AND warehouse_view.id = #{goodsId};
+	    WHERE account.goods_id = warehouse_view.id AND warehouse_view.id = #{goodsId}
+	    ORDER BY update_date DESC;
     </select>
 
     <select id="getStoreByGoods" parameterType="Integer" resultType="Goods">
         SELECT *
         FROM account INNER JOIN warehouse_view
-	    WHERE account.goods_id = warehouse_view.id AND warehouse_view.id = #{goodsId} AND account.behavior = 0;
+	    WHERE account.goods_id = warehouse_view.id AND warehouse_view.id = #{goodsId} AND account.behavior = 0
+	    ORDER BY update_date DESC;
     </select>
 
     <select id="getDeliverByGoods" parameterType="Integer" resultType="Goods">
         SELECT *
         FROM account INNER JOIN warehouse_view
-	    WHERE account.goods_id = warehouse_view.id AND warehouse_view.id = #{goodsId} AND account.behavior = 1;
+	    WHERE account.goods_id = warehouse_view.id AND warehouse_view.id = #{goodsId} AND account.behavior = 1
+	    ORDER BY update_date DESC;
     </select>
 
 	<select id="isExist" resultType="Integer">
@@ -123,24 +150,27 @@
 		SELECT * FROM account INNER JOIN warehouse_view
 	    WHERE account.goods_id = warehouse_view.id AND to_days(update_date) = to_days(now())
 		<if test='goods_id != 0'>
-			AND account.goods_id = #{goodsId};
+			AND account.goods_id = #{goodsId}
 		</if>
+		ORDER BY update_date DESC;
 	</select>
 
 	<select id="getAccountYesterday" parameterType="Integer"  resultType="Goods">
 		SELECT * FROM account INNER JOIN warehouse_view
 	    WHERE account.goods_id = warehouse_view.id AND TO_DAYS( NOW( ) ) - TO_DAYS(update_date) &lt;= 1
 		<if test='goods_id != 0'>
-			AND account.goods_id = #{goodsId};
+			AND account.goods_id = #{goodsId}
 		</if>
+		ORDER BY update_date DESC;
 	</select>
 
 	<select id="getAccountThisWeek" parameterType="Integer"  resultType="Goods">
 		SELECT * FROM account INNER JOIN warehouse_view
 		WHERE account.goods_id = warehouse_view.id AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(update_date)
 		<if test='goods_id != 0'>
-			AND account.goods_id = #{goodsId};
+			AND account.goods_id = #{goodsId}
 		</if>
+		ORDER BY update_date DESC;
 	</select>
 
 	<select id="getAccountByMonth" resultType="Goods">
@@ -149,15 +179,16 @@
 		<if test='goods_id != 0'>
 			AND account.goods_id = #{goods_id}
 		</if>
-		ORDER BY account.update_date;
+		ORDER BY update_date DESC;
 	</select>
 
 	<select id="getAccountBySeason" resultType="Goods">
 		SELECT * FROM account INNER JOIN warehouse_view
 		WHERE account.goods_id = warehouse_view.id AND QUARTER(update_date)=QUARTER(DATE_SUB(now(),interval #{season} QUARTER))
 		<if test='goods_id != 0'>
-			AND account.goods_id = #{goods_id};
+			AND account.goods_id = #{goods_id}
 		</if>
+		ORDER BY update_date DESC;
 	</select>
 
 	<select id="getAccountByYear" resultType="Goods">
@@ -166,7 +197,7 @@
 		<if test='goods_id != 0'>
 			AND account.goods_id = #{goods_id}
 		</if>
-		ORDER BY account.update_date;
+		ORDER BY update_date DESC;
 	</select>
 
 </mapper>

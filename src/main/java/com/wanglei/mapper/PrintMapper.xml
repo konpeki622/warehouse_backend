@@ -8,7 +8,29 @@
 	        SELECT print.id, print_date, username, print_behavior.behavior as behavior_name, goods_id
 	        FROM print inner join print_behavior
 	        where print.behavior = print_behavior.id
+	        ORDER BY print_date DESC;
 	</select>
+
+    <select id="getPrintListByKeywords" parameterType="String" resultType="PrintHistory" >
+        SELECT print.id, print.print_date, print.username, print_behavior.behavior as behavior_name, print.goods_id
+        FROM print inner join print_behavior
+        where print.behavior = print_behavior.id
+        <if test='keywords != null'>
+            AND
+            <foreach collection='keywords' item='item' index='index' separator=' OR '>
+                username LIKE concat('%',#{item},'%')
+            </foreach>
+            OR
+            <foreach collection='keywords' item='item' index='index' separator=' OR '>
+                goods_id LIKE concat('%',#{item},'%')
+            </foreach>
+            OR
+            <foreach collection='keywords' item='item' index='index' separator=' OR '>
+                print_behavior.behavior LIKE concat('%',#{item},'%')
+            </foreach>
+        </if>
+        ORDER BY print.print_date DESC;
+    </select>
 
     <insert id="insertPrintHistory" parameterType="PrintHistory">
         insert into print (print_date, username, behavior, goods_id) values (#{print_date}, #{username}, #{behavior}, #{goods_id});

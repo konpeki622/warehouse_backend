@@ -49,15 +49,14 @@ public class UserController {
         return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"failed to register!"));
     }
 
-    @CheckToken
     @RequestMapping(value = {"/password"}, method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity passwordController(@RequestParam(value = "username") String username, @RequestParam(value = "oldPassword") String oldPassword, @RequestParam(value = "newPassword") String newPassword){
-        if(userService.updatePassword(username, oldPassword, newPassword) == -1){
-            return ResponseEntity.status(205).body(new ResponseMessage<>(null).error(205,"invalid password"));
-        }
-        else if (userService.updatePassword(username, oldPassword, newPassword) == 1) {
+        if(userService.updatePassword(username, oldPassword, newPassword) == 200){
             return ResponseEntity.status(200).body(new ResponseMessage<>(null).success());
+        }
+        else if (userService.updatePassword(username, oldPassword, newPassword) == 404) {
+            return ResponseEntity.status(205).body(new ResponseMessage<>(null).error(205,"invalid password"));
         }
         return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"failed to update password!"));
     }

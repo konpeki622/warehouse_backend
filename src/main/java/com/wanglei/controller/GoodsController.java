@@ -36,8 +36,8 @@ public class GoodsController {
 
     @CheckToken
     @RequestMapping(value = {"/account"}, method = RequestMethod.GET)
-    public ResponseMessage getAccountController(@RequestParam(value = "type", defaultValue = "0") Integer type, @RequestParam(value = "goodsId",required = false) Integer goodsId){
-        List<Goods> goodsList = goodsService.getAccountList(type, goodsId);
+    public ResponseMessage getAccountController(@RequestParam(value = "type", defaultValue = "0") Integer type, @RequestParam(value = "goodsId",required = false) Integer goodsId, @RequestParam(value = "keywords",required = false) String[] keywords){
+        List<Goods> goodsList = goodsService.getAccountList(type, goodsId, keywords);
         return new ResponseMessage<>(goodsList).success();
     }
 
@@ -62,7 +62,6 @@ public class GoodsController {
         return new ResponseMessage<>(goodsList).success();
     }
 
-    @CheckToken
     @RequestMapping(value = {"/goods/update"}, method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity goodsUpdateController(@RequestParam(value = "material_id", defaultValue = "0")Integer materialId,

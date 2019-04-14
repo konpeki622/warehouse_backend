@@ -28,10 +28,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer updatePassword(String username, String oldPassword, String newPassword) {
-        if (!findUserByName(username).getPassword().equals(oldPassword)) return -1;
+        if (!findUserByName(username).getPassword().equals(oldPassword)) return 404;
         else {
             userMapper.updatePassword(username, newPassword);
-            return 1;
+            return 200;
         }
     }
 }

@@ -28,9 +28,12 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public List<Goods> getAccountList(Integer type, Integer goodsId) {
+    public List<Goods> getAccountList(Integer type, Integer goodsId, String[] keywords) {
         if (type == 1) {
             return goodsMapper.getAccountByGoods(goodsId);
+        }
+        if (type == 2) {
+            return goodsMapper.getAccountByKeywords(keywords);
         }
         else {
             return goodsMapper.getAccountAll();

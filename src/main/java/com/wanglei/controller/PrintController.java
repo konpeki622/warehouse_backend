@@ -18,8 +18,8 @@ public class PrintController {
 
     @CheckToken
     @RequestMapping(value = {"/history/print"}, method = RequestMethod.GET)
-    public ResponseMessage printController(){
-        List<PrintHistory> materials = printService.getPrintHistoryList();
+    public ResponseMessage printController(@RequestParam(value = "type", defaultValue = "0") Integer type, @RequestParam(value = "keywords",required = false) String[] keywords){
+        List<PrintHistory> materials = printService.getPrintHistoryList(type, keywords);
         return new ResponseMessage<>(materials).success();
     }
 
