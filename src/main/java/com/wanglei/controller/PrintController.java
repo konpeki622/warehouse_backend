@@ -18,9 +18,10 @@ public class PrintController {
 
     @CheckToken
     @RequestMapping(value = {"/history/print"}, method = RequestMethod.GET)
-    public ResponseMessage printController(@RequestParam(value = "type", defaultValue = "0") Integer type, @RequestParam(value = "keywords",required = false) String[] keywords){
-        List<PrintHistory> materials = printService.getPrintHistoryList(type, keywords);
-        return new ResponseMessage<>(materials).success();
+    public ResponseMessage printController(@RequestParam(value = "keywords",required = false) String[] keywords, @RequestParam(value = "page") Integer page){
+        List<PrintHistory> print = printService.getPrintHistoryList(keywords, page);
+        Integer count = printService.getCount(keywords);
+        return new ResponseMessage<>(print, count).success();
     }
 
     @CheckToken
@@ -28,8 +29,8 @@ public class PrintController {
     @ResponseBody
     public ResponseEntity printAddController(@RequestBody PrintHistory printHistory){
         if(printService.insertPrintHistory(printHistory)){
-            return ResponseEntity.status(200).body(new ResponseMessage<>(null).success());
+            return ResponseEntity.status(200).body(new ResponseMessage<>(null, 0).success());
         }
-        return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"failed to update goods!"));
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null, 0).error(202,"failed to update goods!"));
     }
 }

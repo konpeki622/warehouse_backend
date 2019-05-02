@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class PrintHistory {
     private Integer id;
-    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private String print_date;
     private String username;
     private Integer behavior;

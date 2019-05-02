@@ -25,40 +25,42 @@ public class UserController {
         User result = userService.findUserByName(username);
         if (result == null) {
             jsonObject.put("message", "登录失败,用户不存在");
-            return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"account is not exist"));
+            return ResponseEntity.status(202).body(new ResponseMessage<>(null, 0).error(202,"account is not exist"));
         }
         else {
             if (!result.getPassword().equals(password)) {
-                return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"invalid password"));
+                return ResponseEntity.status(202).body(new ResponseMessage<>(null, 0).error(202,"invalid password"));
             }
             else {
-                String token = JwtUtil.createJWT(6000000, result);
+                String token = JwtUtil.createJWT(60000000, result);
                 jsonObject.put("token", token);
                 jsonObject.put("user", result);
-                return ResponseEntity.status(200).body(new ResponseMessage<>(jsonObject).success());
+                return ResponseEntity.status(200).body(new ResponseMessage<>(jsonObject, 1).success());
             }
         }
     }
 
     @RequestMapping(value = {"/register"}, method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity registerController(@RequestBody User user){
-        if(userService.register(user)){
-            return ResponseEntity.status(200).body(new ResponseMessage<>(null).success());
+    public ResponseEntity registerController(@RequestParam(value = "username")String username,
+                                             @RequestParam(value = "password")String password,
+                                             @RequestParam(value = "auth")Integer auth){
+        if(userService.register(username, password, auth)){
+            return ResponseEntity.status(200).body(new ResponseMessage<>(null, 0).success());
         }
-        return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"failed to register!"));
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null, 0).error(202,"failed to register!"));
     }
 
     @RequestMapping(value = {"/password"}, method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity passwordController(@RequestParam(value = "username") String username, @RequestParam(value = "oldPassword") String oldPassword, @RequestParam(value = "newPassword") String newPassword){
         if(userService.updatePassword(username, oldPassword, newPassword) == 200){
-            return ResponseEntity.status(200).body(new ResponseMessage<>(null).success());
+            return ResponseEntity.status(200).body(new ResponseMessage<>(null, 0).success());
         }
         else if (userService.updatePassword(username, oldPassword, newPassword) == 404) {
-            return ResponseEntity.status(205).body(new ResponseMessage<>(null).error(205,"invalid password"));
+            return ResponseEntity.status(205).body(new ResponseMessage<>(null, 0).error(205,"invalid password"));
         }
-        return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"failed to update password!"));
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null, 0).error(202,"failed to update password!"));
     }
 
 

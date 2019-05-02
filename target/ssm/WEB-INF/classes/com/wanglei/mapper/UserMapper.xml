@@ -6,10 +6,10 @@
 <mapper namespace="com.wanglei.mapper.UserMapper">
 
     <select id="findByUsername" resultType="User" parameterType="String">
-        select * from userinfo where username = #{username};
+        select * from userinfo inner join authinfo where userinfo.auth = authinfo.id and username = #{username};
     </select>
 
-    <insert id="insertUser" parameterType="User">
+    <insert id="insertUser">
         insert into userinfo (username, password, auth) values (#{username}, #{password}, #{auth});
     </insert>
 

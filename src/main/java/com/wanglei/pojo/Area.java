@@ -4,10 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.omg.PortableInterceptor.INACTIVE;
 
-/*
- * 产地实体
- * 与产地表对应
- */
 @Data
 public class Area {
     private Integer area_id;

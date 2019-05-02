@@ -20,9 +20,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean register(User user) {
-        if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) return false;
-        userMapper.insertUser(user);
+    public boolean register(String username, String password, Integer auth) {
+        if (username.isEmpty() || password.isEmpty()) return false;
+        userMapper.insertUser(username, password, auth);
         return true;
     }
 

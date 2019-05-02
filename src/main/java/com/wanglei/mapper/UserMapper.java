@@ -9,7 +9,7 @@ public interface UserMapper {
 
     User findByUsername(String username);
 
-    void insertUser(User user);
+    void insertUser(@Param("username") String username, @Param("password") String password, @Param("auth") Integer auth);
 
     void updatePassword(@Param("username")String username, @Param("password")String password);
 }

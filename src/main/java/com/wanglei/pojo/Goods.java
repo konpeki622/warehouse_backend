@@ -6,26 +6,21 @@ import lombok.Data;
 
 import java.util.Date;
 
-/*
- * 订单实体
- * 与入库表、出库表和仓库表对应
- *
- */
 @Data
 public class Goods {
     // 基本信息
     private Integer id;
     private Integer material_id;
-    private Integer material_size;
+    private Float material_size;
     private Integer area_id;
     private String material_name;
     private String area_name;
     // 记录变更信息
-    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date update_date;
     private Integer goods_id;
     private String deliver_owner;
-    private Integer update_size;
+    private Float update_size;
     private Integer behavior;
     private String username;
 
@@ -48,11 +43,11 @@ public class Goods {
     }
 
     @JsonProperty(value = "material_size")
-    public Integer getMaterialSize() {
+    public Float getMaterialSize() {
         return material_size;
     }
 
-    public void setMaterialSize(Integer material_size) {
+    public void setMaterialSize(Float material_size) {
         this.material_size = material_size;
     }
 
@@ -107,11 +102,11 @@ public class Goods {
     }
 
     @JsonProperty(value = "update_size")
-    public Integer getUpdateSize() {
+    public Float getUpdateSize() {
         return update_size;
     }
 
-    public void setUpdateSize(Integer update_size) {
+    public void setUpdateSize(Float update_size) {
         this.update_size = update_size;
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface PrintMapper {
-    List<PrintHistory> getPrintHistoryList();
-    List<PrintHistory> getPrintListByKeywords(@Param("keywords")String[] keywords);
+    List<PrintHistory> getPrintHistoryList(@Param("keywords")String[] keywords, @Param("page") Integer page);
+    Integer getCount(@Param("keywords")String[] keywords);
     void insertPrintHistory(PrintHistory printHistory);
 }

@@ -1,39 +1,56 @@
 package com.wanglei.mapper;
 
-import com.wanglei.pojo.AddGoods;
 import com.wanglei.pojo.Goods;
+import com.wanglei.pojo.GoodsSum;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 @Repository
 public interface GoodsMapper {
-    List<Goods> getGoodsAll();
-    List<Goods> getAccountAll();
-    List<Goods> getStoreAll();
-    List<Goods> getDeliverAll();
-    List<Goods> getGoodsByKeywords(@Param("keywords") String[] keywords);
-    List<Goods> getGoodsByMaterial(@Param("keywords") String[] keywords);
+    List<Goods> getGoodsAll(@Param("page") Integer page);
+    Integer getGoodsCount();
+    List<Goods> getAccountAll(@Param("goodsId") Integer goodsId, @Param("keywords") String[] keywords, @Param("page") Integer page);
+    Integer getAccountCount(@Param("goodsId") Integer goodsId, @Param("keywords") String[] keywords);
+    List<Goods> getStoreAll(@Param("goodsId") Integer goodsId, @Param("page") Integer page);
+    Integer getStoreCount(@Param("goodsId") Integer goodsId);
+    List<Goods> getDeliverAll(@Param("goodsId") Integer goodsId, @Param("page") Integer page);
+    Integer getDeliverCount(@Param("goodsId") Integer goodsId);
 
-    List<Goods> getAccountByKeywords(@Param("keywords") String[] keywords);
+    List<Goods> getGoodsByKeywords(@Param("keywords") String[] keywords, @Param("page") Integer page);
+    Integer getGoodsCountByKeywords(@Param("keywords") String[] keywords);
+    List<Goods> getGoodsByMaterial(@Param("keywords") String[] keywords, @Param("page") Integer page);
+    Integer getGoodsCountByMaterial(@Param("keywords") String[] keywords);
+    List<Goods> getGoodsByArea(@Param("keywords") String[] keywords, @Param("page") Integer page);
+    Integer getGoodsCountByArea(@Param("keywords") String[] keywords);
 
-    List<Goods> getAccountToday(@Param("goods_id")Integer goodsId);
-    List<Goods> getAccountYesterday(@Param("goods_id")Integer goodsId);
-    List<Goods> getAccountThisWeek(@Param("goods_id")Integer goodsId);
-    List<Goods> getAccountByMonth(@Param("goods_id")Integer goodsId, @Param("month")Integer month);
-    List<Goods> getAccountBySeason(@Param("goods_id")Integer goodsId, @Param("season")Integer season);
-    List<Goods> getAccountByYear(@Param("goods_id")Integer goodsId, @Param("year")Integer year);
+    List<Goods> getAccountToday(@Param("goodsId")Integer goodsId, @Param("page") Integer page);
+    Integer getAccountCountToday(@Param("goodsId")Integer goodsId);
+    List<Goods> getAccountYesterday(@Param("goodsId")Integer goodsId, @Param("page") Integer page);
+    Integer getAccountCountYesterday(@Param("goodsId")Integer goodsId);
+    List<Goods> getAccountThisWeek(@Param("goodsId")Integer goodsId, @Param("page") Integer page);
+    Integer getAccountCountThisWeek(@Param("goodsId")Integer goodsId);
+    List<Goods> getAccountByMonth(@Param("goodsId")Integer goodsId, @Param("month")Integer month, @Param("page") Integer page);
+    Integer getAccountCountByMonth(@Param("goodsId")Integer goodsId, @Param("month")Integer month);
+    List<Goods> getAccountBySeason(@Param("goodsId")Integer goodsId, @Param("year")Integer year, @Param("season")Integer season, @Param("page") Integer page);
+    Integer getAccountCountBySeason(@Param("goodsId")Integer goodsId, @Param("year")Integer year, @Param("season")Integer season);
+    List<Goods> getAccountByYear(@Param("goodsId")Integer goodsId, @Param("year")Integer year, @Param("page") Integer page);
+    Integer getAccountCountByYear(@Param("goodsId")Integer goodsId, @Param("year")Integer year);
 
-    List<Goods> getGoodsByArea(@Param("keywords") String[] keywords);
-    List<Goods> getAccountByGoods(Integer goodsId);
-    List<Goods> getStoreByGoods(Integer goodsId);
-    List<Goods> getDeliverByGoods(Integer goodsId);
+    List<GoodsSum> getStoreSumByArea();
+    List<GoodsSum> getStoreSumByMaterial();
+    List<GoodsSum> getDeliverSumByArea();
+    List<GoodsSum> getDeliverSumByMaterial();
+    List<GoodsSum> getCurrentSumByMaterial();
+    List<GoodsSum> getCurrentSumByArea();
+    List<GoodsSum> getSellSumByMaterial(@Param("materialId")Integer materialId);
+    List<GoodsSum> getSellSumByArea(@Param("areaId")Integer areaId);
+
     Integer isExist(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId);
     Integer getId(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId);
-    void insertGoods(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId, @Param("update_size")Integer updateSize);
+    void insertGoods(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId, @Param("update_size")Float updateSize);
     void deleteGoods(Integer goodsId);
-    void insertAccount(@Param("goods_id")Integer goodsId, @Param("update_date")String updateDate, @Param("deliver_owner")String deliverOwner, @Param("update_size")Integer updateSize, @Param("behavior")Integer behavior, @Param("username")String username);
-    void updateAccount(@Param("behavior")Integer behavior, @Param("update_size")Integer updateSize, @Param("goods_id")Integer goodsId);
+    void insertAccount(@Param("goodsId")Integer goodsId, @Param("update_date")String updateDate, @Param("deliver_owner")String deliverOwner, @Param("update_size")Float updateSize, @Param("behavior")Integer behavior, @Param("username")String username);
+    void updateAccount(@Param("behavior")Integer behavior, @Param("update_size")Float updateSize, @Param("goodsId")Integer goodsId);
 }

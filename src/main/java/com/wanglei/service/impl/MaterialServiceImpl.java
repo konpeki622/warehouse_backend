@@ -14,13 +14,13 @@ public class MaterialServiceImpl implements MaterialService {
     private MaterialMapper materialMapper;
 
     @Override
-    public List<Material> getMaterialList(Integer type, String[] keywords){
-        if (type == 0) {
-            return materialMapper.getMaterialList();
-        }
-        else {
-            return materialMapper.getMaterialByKeywords(keywords);
-        }
+    public List<Material> getMaterialList(String[] keywords, Integer page){
+        return materialMapper.getMaterialList(keywords, page);
+    }
+
+    @Override
+    public Integer getCount(String[] keywords) {
+        return materialMapper.getCount(keywords);
     }
 
     @Override

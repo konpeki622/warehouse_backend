@@ -14,13 +14,13 @@ public class PrintServiceImpl implements PrintService {
     PrintMapper printMapper;
 
     @Override
-    public List<PrintHistory> getPrintHistoryList(Integer type, String[] keywords) {
-        if (type == 0) {
-            return printMapper.getPrintHistoryList();
-        }
-        else {
-            return printMapper.getPrintListByKeywords(keywords);
-        }
+    public List<PrintHistory> getPrintHistoryList(String[] keywords, Integer page) {
+        return printMapper.getPrintHistoryList(keywords, page);
+    }
+
+    @Override
+    public Integer getCount(String[] keywords) {
+        return printMapper.getCount(keywords);
     }
 
 

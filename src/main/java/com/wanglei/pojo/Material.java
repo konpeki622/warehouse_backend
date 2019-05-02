@@ -3,11 +3,6 @@ package com.wanglei.pojo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-/*
- * 原料实体
- * 与原料表对应
- *
- */
 @Data
 public class Material {
     private Integer material_id;

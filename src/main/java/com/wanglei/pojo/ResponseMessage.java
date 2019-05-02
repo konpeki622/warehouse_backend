@@ -8,9 +8,11 @@ public class ResponseMessage<T> implements MakeResponse {
     private Integer status;
     private String message;
     private T data;
+    private Integer count;
 
-    public ResponseMessage(T data) {
+    public ResponseMessage(T data, Integer count) {
         this.data = data;
+        this.count = count;
     }
 
     @Override

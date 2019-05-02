@@ -5,11 +5,22 @@
 
 <mapper namespace="com.wanglei.mapper.MaterialMapper">
     <select id="getMaterialList" resultType="Material" >
-	        select * from material order by material_id;
+	    select *
+        from material
+        <if test='keywords != null'>
+            WHERE
+            <foreach collection='keywords' item='item' index='index' separator=' OR '>
+                material_name LIKE concat('%',#{item},'%')
+            </foreach>
+        </if>
+        order by material_id
+        <if test='page != 0'>
+	        LIMIT ${(page-1)*20}, 20;
+        </if>
 	</select>
 
-    <select id="getMaterialByKeywords" parameterType="String" resultType="Material" >
-        SELECT *
+    <select id="getCount" resultType="Integer" >
+        SELECT COUNT(*)
         FROM material
         <if test='keywords != null'>
             WHERE
@@ -17,7 +28,6 @@
                 material_name LIKE concat('%',#{item},'%')
             </foreach>
         </if>
-        ORDER BY material_id;
     </select>
 
     <insert id="insertMaterial" parameterType="String" keyProperty="material_id" useGeneratedKeys="true">

@@ -7,31 +7,96 @@
     <select id="getGoodsAll" resultType="Goods" >
 	    SELECT *
 	    FROM warehouse_view
-	    ORDER BY id;
+	    ORDER BY id
+	    LIMIT ${(page-1)*10}, 10;
+	</select>
+
+	<select id="getGoodsCount" resultType="Integer" >
+		SELECT COUNT(*)
+		FROM warehouse_view
 	</select>
 
 	<select id="getAccountAll" resultType="Goods" >
 	    SELECT *
 	    FROM account INNER JOIN warehouse_view
 	    WHERE account.goods_id = warehouse_view.id
-	    ORDER BY update_date DESC;
+		<if test='goodsId != 0'>
+			AND warehouse_view.id = #{goodsId}
+		</if>
+		<if test='keywords != null'>
+			AND
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				username LIKE concat('%',#{item},'%')
+			</foreach>
+			OR
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				goods_id LIKE concat('%',#{item},'%')
+			</foreach>
+		</if>
+	    ORDER BY update_date DESC
+	    LIMIT ${(page-1)*10}, 10;
+	</select>
+
+	<select id="getAccountCount" resultType="Integer" >
+		SELECT COUNT(*)
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id
+		<if test='goodsId != 0'>
+			AND warehouse_view.id = #{goodsId}
+		</if>
+		<if test='keywords != null'>
+			AND
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				username LIKE concat('%',#{item},'%')
+			</foreach>
+			OR
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				goods_id LIKE concat('%',#{item},'%')
+			</foreach>
+		</if>
 	</select>
 
     <select id="getStoreAll" resultType="Goods" >
 	    SELECT *
 	    FROM account INNER JOIN warehouse_view
 	    WHERE account.goods_id = warehouse_view.id AND account.behavior = 0
-	    ORDER BY update_date DESC;
+		<if test='goodsId != 0'>
+			AND warehouse_view.id = #{goodsId}
+		</if>
+	    ORDER BY update_date DESC
+	    LIMIT ${(page-1)*10}, 10;
+	</select>
+
+	<select id="getStoreCount" resultType="Integer" >
+		SELECT COUNT(*)
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND account.behavior = 0
+		<if test='goodsId != 0'>
+			AND warehouse_view.id = #{goodsId}
+		</if>
 	</select>
 
     <select id="getDeliverAll" resultType="Goods" >
 	    SELECT *
 	    FROM account INNER JOIN warehouse_view
 	    WHERE account.goods_id = warehouse_view.id AND account.behavior = 1
-	    ORDER BY update_date DESC;
+		<if test='goodsId != 0'>
+			AND warehouse_view.id = #{goodsId}
+		</if>
+	    ORDER BY update_date DESC
+	    LIMIT ${(page-1)*10}, 10;
 	</select>
 
-	<select id="getGoodsByKeywords" parameterType="String" resultType="Goods" >
+	<select id="getDeliverCount" resultType="Integer" >
+		SELECT COUNT(*)
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND account.behavior = 1
+		<if test='goodsId != 0'>
+			AND warehouse_view.id = #{goodsId}
+		</if>
+	</select>
+
+	<select id="getGoodsByKeywords" resultType="Goods" >
 		SELECT *
 	    FROM warehouse_view
 		<if test='keywords != null'>
@@ -48,11 +113,40 @@
 				area_name LIKE concat('%',#{item},'%')
 			</foreach>
 		</if>
-		ORDER BY id;
+		ORDER BY id
+		LIMIT ${(page-1)*10}, 10;
 	</select>
 
-	<select id="getAccountByKeywords" parameterType="String" resultType="Goods" >
+	<select id="getGoodsCountByKeywords" resultType="Integer" >
+		SELECT COUNT(*)
+		FROM warehouse_view
+		<if test='keywords != null'>
+			WHERE
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				id LIKE concat('%',#{item},'%')
+			</foreach>
+			OR
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				material_name LIKE concat('%',#{item},'%')
+			</foreach>
+			OR
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				area_name LIKE concat('%',#{item},'%')
+			</foreach>
+		</if>
+	</select>
+
+	<select id="getAccountByKeywords" resultType="Goods" >
 		SELECT *
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id
+
+		ORDER BY update_date DESC
+		LIMIT ${(page-1)*10}, 10;
+	</select>
+
+	<select id="getAccountCountByKeywords" resultType="Integer" >
+		SELECT COUNT(*)
 		FROM account INNER JOIN warehouse_view
 		WHERE account.goods_id = warehouse_view.id
 		<if test='keywords != null'>
@@ -65,10 +159,9 @@
 				goods_id LIKE concat('%',#{item},'%')
 			</foreach>
 		</if>
-		ORDER BY update_date DESC;
 	</select>
 
-    <select id="getGoodsByMaterial" parameterType="String" resultType="Goods" >
+    <select id="getGoodsByMaterial" resultType="Goods" >
 	    SELECT *
 	    FROM warehouse_view
 		<if test='keywords != null'>
@@ -77,10 +170,22 @@
 				material_name LIKE concat('%',#{item},'%')
 			</foreach>
 		</if>
-		ORDER BY id;
+		ORDER BY id
+		LIMIT ${(page-1)*10}, 10;
 	</select>
 
-    <select id="getGoodsByArea" parameterType="String" resultType="Goods" >
+	<select id="getGoodsCountByMaterial" resultType="Integer" >
+		SELECT COUNT(*)
+		FROM warehouse_view
+		<if test='keywords != null'>
+			WHERE
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				material_name LIKE concat('%',#{item},'%')
+			</foreach>
+		</if>
+	</select>
+
+    <select id="getGoodsByArea" resultType="Goods" >
 	    SELECT *
 	    FROM warehouse_view
 		<if test='keywords != null'>
@@ -89,29 +194,20 @@
 				area_name LIKE concat('%',#{item},'%')
 			</foreach>
 		</if>
-		ORDER BY id;
+		ORDER BY id
+		LIMIT ${(page-1)*10}, 10;
 	</select>
 
-	<select id="getAccountByGoods" parameterType="Integer" resultType="Goods">
-        SELECT *
-        FROM account INNER JOIN warehouse_view
-	    WHERE account.goods_id = warehouse_view.id AND warehouse_view.id = #{goodsId}
-	    ORDER BY update_date DESC;
-    </select>
-
-    <select id="getStoreByGoods" parameterType="Integer" resultType="Goods">
-        SELECT *
-        FROM account INNER JOIN warehouse_view
-	    WHERE account.goods_id = warehouse_view.id AND warehouse_view.id = #{goodsId} AND account.behavior = 0
-	    ORDER BY update_date DESC;
-    </select>
-
-    <select id="getDeliverByGoods" parameterType="Integer" resultType="Goods">
-        SELECT *
-        FROM account INNER JOIN warehouse_view
-	    WHERE account.goods_id = warehouse_view.id AND warehouse_view.id = #{goodsId} AND account.behavior = 1
-	    ORDER BY update_date DESC;
-    </select>
+	<select id="getGoodsCountByArea" resultType="Integer" >
+		SELECT COUNT(*)
+		FROM warehouse_view
+		<if test='keywords != null'>
+			WHERE
+			<foreach collection='keywords' item='item' index='index' separator=' OR '>
+				area_name LIKE concat('%',#{item},'%')
+			</foreach>
+		</if>
+	</select>
 
 	<select id="isExist" resultType="Integer">
 		SELECT COUNT(*) AS result
@@ -134,70 +230,188 @@
     </delete>
 
 	<insert id="insertAccount">
-       insert into account (goods_id, update_date, deliver_owner, update_size, behavior, username) values (#{goods_id}, #{update_date}, #{deliver_owner}, #{update_size}, #{behavior}, #{username});
+       insert into account (goods_id, update_date, deliver_owner, update_size, behavior, username) values (#{goodsId}, #{update_date}, #{deliver_owner}, #{update_size}, #{behavior}, #{username});
     </insert>
 
 	<update id="updateAccount">
 		<if test='behavior == 0'>
-			UPDATE warehouse SET material_size = material_size + #{update_size} WHERE id = #{goods_id};
+			UPDATE warehouse SET material_size = material_size + #{update_size} WHERE id = #{goodsId};
 		</if>
 		<if test="behavior == 1">
-			UPDATE warehouse SET material_size = material_size - #{update_size} WHERE id = #{goods_id};
+			UPDATE warehouse SET material_size = material_size - #{update_size} WHERE id = #{goodsId};
 		</if>
     </update>
 
-	<select id="getAccountToday" parameterType="Integer" resultType="Goods">
+	<select id="getAccountToday" resultType="Goods">
 		SELECT * FROM account INNER JOIN warehouse_view
 	    WHERE account.goods_id = warehouse_view.id AND to_days(update_date) = to_days(now())
-		<if test='goods_id != 0'>
+		<if test='goodsId != 0'>
 			AND account.goods_id = #{goodsId}
 		</if>
-		ORDER BY update_date DESC;
+		ORDER BY update_date DESC
+		LIMIT ${(page-1)*10}, 10;
 	</select>
 
-	<select id="getAccountYesterday" parameterType="Integer"  resultType="Goods">
+	<select id="getAccountCountToday" resultType="Integer" >
+		SELECT COUNT(*)
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND to_days(update_date) = to_days(now())
+		<if test='goodsId != 0'>
+			AND account.goods_id = #{goodsId}
+		</if>
+	</select>
+
+	<select id="getAccountYesterday" resultType="Goods">
 		SELECT * FROM account INNER JOIN warehouse_view
-	    WHERE account.goods_id = warehouse_view.id AND TO_DAYS( NOW( ) ) - TO_DAYS(update_date) &lt;= 1
-		<if test='goods_id != 0'>
+	    WHERE account.goods_id = warehouse_view.id AND TO_DAYS( NOW( ) ) - TO_DAYS(update_date) = 1
+		<if test='goodsId != 0'>
 			AND account.goods_id = #{goodsId}
 		</if>
-		ORDER BY update_date DESC;
+		ORDER BY update_date DESC
+		LIMIT ${(page-1)*10}, 10;
 	</select>
 
-	<select id="getAccountThisWeek" parameterType="Integer"  resultType="Goods">
+	<select id="getAccountCountYesterday" resultType="Integer" >
+		SELECT COUNT(*)
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND TO_DAYS( NOW( ) ) - TO_DAYS(update_date) = 1
+		<if test='goodsId != 0'>
+			AND account.goods_id = #{goodsId}
+		</if>
+	</select>
+
+	<select id="getAccountThisWeek" resultType="Goods">
 		SELECT * FROM account INNER JOIN warehouse_view
 		WHERE account.goods_id = warehouse_view.id AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(update_date)
-		<if test='goods_id != 0'>
+		<if test='goodsId != 0'>
 			AND account.goods_id = #{goodsId}
 		</if>
-		ORDER BY update_date DESC;
+		ORDER BY update_date DESC
+		LIMIT ${(page-1)*10}, 10;
+	</select>
+
+	<select id="getAccountCountThisWeek" resultType="Integer" >
+		SELECT COUNT(*)
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(update_date)
+		<if test='goodsId != 0'>
+			AND account.goods_id = #{goodsId}
+		</if>
 	</select>
 
 	<select id="getAccountByMonth" resultType="Goods">
 		SELECT * FROM account INNER JOIN warehouse_view
 		WHERE account.goods_id = warehouse_view.id AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( update_date, '%Y%m' ) ) =#{month}
-		<if test='goods_id != 0'>
-			AND account.goods_id = #{goods_id}
+		<if test='goodsId != 0'>
+			AND account.goods_id = #{goodsId}
 		</if>
-		ORDER BY update_date DESC;
+		ORDER BY update_date DESC
+		LIMIT ${(page-1)*10}, 10;
+	</select>
+
+	<select id="getAccountCountByMonth" resultType="Integer" >
+		SELECT COUNT(*)
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( update_date, '%Y%m' ) ) =#{month}
+		<if test='goodsId != 0'>
+			AND account.goods_id = #{goodsId}
+		</if>
 	</select>
 
 	<select id="getAccountBySeason" resultType="Goods">
 		SELECT * FROM account INNER JOIN warehouse_view
 		WHERE account.goods_id = warehouse_view.id AND QUARTER(update_date)=QUARTER(DATE_SUB(now(),interval #{season} QUARTER))
-		<if test='goods_id != 0'>
-			AND account.goods_id = #{goods_id}
+		AND YEAR(update_date)=YEAR(date_sub(now(),interval #{year} year))
+		<if test='goodsId != 0'>
+			AND account.goods_id = #{goodsId}
 		</if>
-		ORDER BY update_date DESC;
+		ORDER BY update_date DESC
+		LIMIT ${(page-1)*10}, 10;
+	</select>
+
+	<select id="getAccountCountBySeason" resultType="Integer" >
+		SELECT COUNT(*)
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND QUARTER(update_date)=QUARTER(DATE_SUB(now(),interval #{season} QUARTER))
+		AND YEAR(update_date)=YEAR(date_sub(now(),interval #{year} year))
+		<if test='goodsId != 0'>
+			AND account.goods_id = #{goodsId}
+		</if>
 	</select>
 
 	<select id="getAccountByYear" resultType="Goods">
 		SELECT * FROM account INNER JOIN warehouse_view
 		WHERE account.goods_id = warehouse_view.id AND YEAR(update_date)=YEAR(date_sub(now(),interval #{year} year))
-		<if test='goods_id != 0'>
-			AND account.goods_id = #{goods_id}
+		<if test='goodsId != 0'>
+			AND account.goods_id = #{goodsId}
 		</if>
-		ORDER BY update_date DESC;
+		ORDER BY update_date DESC
+		<if test='page != 0'>
+			LIMIT ${(page-1)*10}, 10;
+		</if>
+	</select>
+
+	<select id="getAccountCountByYear" resultType="Integer" >
+		SELECT COUNT(*)
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND YEAR(update_date)=YEAR(date_sub(now(),interval #{year} year))
+		<if test='goodsId != 0'>
+			AND account.goods_id = #{goodsId}
+		</if>
+	</select>
+
+	<select id="getStoreSumByArea" resultType="GoodsSum" >
+		SELECT SUM( material_size ) as goods_sum, area_name as key_name
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND account.behavior = 0
+		GROUP BY area_id;
+	</select>
+
+	<select id="getStoreSumByMaterial" resultType="GoodsSum" >
+		SELECT SUM( material_size ) as goods_sum, material_name as key_name
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND account.behavior = 0
+		GROUP BY material_id;
+	</select>
+
+	<select id="getDeliverSumByArea" resultType="GoodsSum" >
+		SELECT SUM( update_size ) as goods_sum, area_name as key_name
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND account.behavior = 1
+		GROUP BY area_id;
+	</select>
+
+	<select id="getDeliverSumByMaterial" resultType="GoodsSum" >
+		SELECT SUM( update_size ) as goods_sum, material_name as key_name
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND account.behavior = 1
+		GROUP BY material_id;
+	</select>
+
+	<select id="getCurrentSumByMaterial" resultType="GoodsSum" >
+		SELECT SUM( material_size ) as goods_sum, material_name as key_name
+	    FROM warehouse_view
+	    GROUP BY material_id;
+	</select>
+
+	<select id="getCurrentSumByArea" resultType="GoodsSum" >
+		SELECT SUM( material_size ) as goods_sum, area_name as key_name
+		FROM warehouse_view
+		GROUP BY area_id;
+	</select>
+
+	<select id="getSellSumByArea" resultType="GoodsSum" >
+		SELECT SUM( update_size ) as goods_sum, behavior as key_name
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND area_id= #{areaId}
+		GROUP BY account.behavior;
+	</select>
+
+	<select id="getSellSumByMaterial" resultType="GoodsSum" >
+		SELECT SUM( update_size ) as goods_sum, behavior as key_name
+		FROM account INNER JOIN warehouse_view
+		WHERE account.goods_id = warehouse_view.id AND material_id= #{materialId}
+		GROUP BY account.behavior;
 	</select>
 
 </mapper>

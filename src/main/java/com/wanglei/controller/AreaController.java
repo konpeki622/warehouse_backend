@@ -19,6 +19,6 @@ public class AreaController {
     @RequestMapping(value = {"/area"}, method = RequestMethod.GET)
     public ResponseMessage areaController(){
         List<Area> areas = areaService.getAreaList();
-        return new ResponseMessage<>(areas).success();
+        return new ResponseMessage<>(areas, areas.size()).success();
     }
 }
