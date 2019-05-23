@@ -18,6 +18,8 @@ public interface GoodsService {
     Integer getDeliverCount(Integer goodsId);
     Integer getAccountCountByDate(Integer type, Integer goodsId, Integer condition);
 
+    List<GoodsSum> getGoodsGraph(Integer type, Integer goodsId, Integer condition);
+
     List<GoodsSum> getGoodsSumByArea(Integer type);
     List<GoodsSum> getGoodsSumByMaterial(Integer type);
     List<GoodsSum> getGoodsSellSum(Integer type, Integer id);

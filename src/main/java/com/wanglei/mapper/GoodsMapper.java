@@ -38,6 +38,9 @@ public interface GoodsMapper {
     List<Goods> getAccountByYear(@Param("goodsId")Integer goodsId, @Param("year")Integer year, @Param("page") Integer page);
     Integer getAccountCountByYear(@Param("goodsId")Integer goodsId, @Param("year")Integer year);
 
+    List<GoodsSum> getGraphByDate(@Param("goodsId")Integer goodsId, @Param("day")Integer day);
+    List<GoodsSum> getGraphByYear(@Param("goodsId")Integer goodsId, @Param("month")Integer month);
+
     List<GoodsSum> getStoreSumByArea();
     List<GoodsSum> getStoreSumByMaterial();
     List<GoodsSum> getDeliverSumByArea();

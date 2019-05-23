@@ -88,6 +88,15 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
+    public List<GoodsSum> getGoodsGraph(Integer type, Integer goodsId, Integer condition) {
+        switch (type) {
+            case 0: return goodsMapper.getGraphByYear(goodsId, condition);
+            case 1: return goodsMapper.getGraphByDate(goodsId, condition);
+            default:return null;
+        }
+    }
+
+    @Override
     public Integer getGoodsCount(Integer type, String[] keywords) {
         switch (type) {
             case 0:

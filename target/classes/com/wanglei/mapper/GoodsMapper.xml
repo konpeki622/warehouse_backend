@@ -346,9 +346,7 @@
 			AND account.goods_id = #{goodsId}
 		</if>
 		ORDER BY update_date DESC
-		<if test='page != 0'>
-			LIMIT ${(page-1)*10}, 10;
-		</if>
+		LIMIT ${(page-1)*10}, 10;
 	</select>
 
 	<select id="getAccountCountByYear" resultType="Integer" >
@@ -358,6 +356,26 @@
 		<if test='goodsId != 0'>
 			AND account.goods_id = #{goodsId}
 		</if>
+	</select>
+
+	<select id="getGraphByYear" resultType="GoodsSum">
+		SELECT SUM(update_size) as goods_sum, behavior as key_name
+		FROM account
+		WHERE PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( update_date, '%Y%m' ) ) =#{month}
+		<if test='goodsId != 0'>
+			AND account.goods_id = #{goodsId}
+		</if>
+		GROUP BY behavior;
+	</select>
+
+	<select id="getGraphByDate" resultType="GoodsSum">
+		SELECT SUM(update_size) as goods_sum, behavior as key_name
+		FROM account
+		WHERE TO_DAYS( NOW( ) ) - TO_DAYS(update_date) = #{day}
+		<if test='goodsId != 0'>
+			AND account.goods_id = #{goodsId}
+		</if>
+		GROUP BY behavior;
 	</select>
 
 	<select id="getStoreSumByArea" resultType="GoodsSum" >

@@ -43,11 +43,18 @@ public class GoodsController {
     }
 
     @CheckToken
-    @RequestMapping(value = {"/account/graph"}, method = RequestMethod.GET)
-    public ResponseMessage getAccountGraphController(@RequestParam(value = "type", defaultValue = "0") Integer type, @RequestParam(value = "goodsId", defaultValue = "0") Integer goodsId, @RequestParam(value = "condition", defaultValue = "0") Integer condition, @RequestParam(value = "page") Integer page){
+    @RequestMapping(value = {"/account/table"}, method = RequestMethod.GET)
+    public ResponseMessage getAccountTableController(@RequestParam(value = "type", defaultValue = "0") Integer type, @RequestParam(value = "goodsId", defaultValue = "0") Integer goodsId, @RequestParam(value = "condition", defaultValue = "0") Integer condition, @RequestParam(value = "page") Integer page){
         List<Goods> goodsList = goodsService.getAccountByDate(type, goodsId, condition, page);
         Integer count = goodsService.getAccountCountByDate(type, goodsId, condition);
         return new ResponseMessage<>(goodsList, count).success();
+    }
+
+    @CheckToken
+    @RequestMapping(value = {"/account/graph"}, method = RequestMethod.GET)
+    public ResponseMessage getAccountGraphController(@RequestParam(value = "type") Integer type, @RequestParam(value = "goodsId", defaultValue = "0") Integer goodsId, @RequestParam(value = "condition") Integer condition){
+        List<GoodsSum> goodsList = goodsService.getGoodsGraph(type, goodsId, condition);
+        return new ResponseMessage<>(goodsList, 2).success();
     }
 
     @CheckToken
