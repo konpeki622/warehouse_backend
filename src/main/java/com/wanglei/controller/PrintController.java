@@ -24,7 +24,6 @@ public class PrintController {
         return new ResponseMessage<>(print, count).success();
     }
 
-    @CheckToken
     @RequestMapping(value = {"/print/add"}, method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity printAddController(@RequestBody PrintHistory printHistory){

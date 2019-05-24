@@ -22,15 +22,16 @@
 	  <property name="driverClassName">  
 	      <value>com.mysql.jdbc.Driver</value>  
 	  </property>  
-	  <property name="url">  
-	      <value>jdbc:mysql://123.207.179.24:3306/warehouse_wanglei?characterEncoding=UTF-8</value>
+	  <property name="url">
+	      <value>jdbc:mysql://localhost:3306/warehouse_wanglei?characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai
+		  </value>
 	
 	  </property>  
 	  <property name="username">  
 	      <value>root</value>  
 	  </property>  
-	  <property name="password">  
-	      <value>maomao381</value>
+	  <property name="password">
+	      <value>liubin2002</value>
 	  </property>  	
 	</bean>
 	

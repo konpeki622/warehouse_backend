@@ -16,7 +16,7 @@ public class Goods {
     private String material_name;
     private String area_name;
     // 记录变更信息
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date update_date;
     private Integer goods_id;
     private String deliver_owner;

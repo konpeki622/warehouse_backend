@@ -103,16 +103,21 @@ public class JwtUtil {
         //签名秘钥，和生成的签名的秘钥一模一样
         String key = user.getPassword();
 
-        //得到DefaultJwtParser
-        Claims claims = Jwts.parser()
-                //设置签名的秘钥
-                .setSigningKey(key)
-                //设置需要解析的jwt
-                .parseClaimsJws(token).getBody();
-
-        if (claims.get("password").equals(user.getPassword())) {
-            return true;
+        try {
+            //得到DefaultJwtParser
+            Claims claims = Jwts.parser()
+                    //设置签名的秘钥
+                    .setSigningKey(key)
+                    //设置需要解析的jwt
+                    .parseClaimsJws(token).getBody();
+            if (claims.get("password").equals(user.getPassword())) {
+                return true;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
         }
+
+
 
         return false;
     }

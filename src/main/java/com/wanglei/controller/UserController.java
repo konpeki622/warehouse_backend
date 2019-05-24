@@ -32,7 +32,7 @@ public class UserController {
                 return ResponseEntity.status(202).body(new ResponseMessage<>(null, 0).error(202,"invalid password"));
             }
             else {
-                String token = JwtUtil.createJWT(60000000, result);
+                String token = JwtUtil.createJWT(600000000, result);
                 jsonObject.put("token", token);
                 jsonObject.put("user", result);
                 return ResponseEntity.status(200).body(new ResponseMessage<>(jsonObject, 1).success());
@@ -55,7 +55,11 @@ public class UserController {
     @ResponseBody
     public ResponseEntity passwordController(@RequestParam(value = "username") String username, @RequestParam(value = "oldPassword") String oldPassword, @RequestParam(value = "newPassword") String newPassword){
         if(userService.updatePassword(username, oldPassword, newPassword) == 200){
-            return ResponseEntity.status(200).body(new ResponseMessage<>(null, 0).success());
+            JSONObject jsonObject = new JSONObject();
+            User result = userService.findUserByName(username);
+            String token = JwtUtil.createJWT(600000000, result);
+            jsonObject.put("token", token);
+            return ResponseEntity.status(200).body(new ResponseMessage<>(jsonObject, 1).success());
         }
         else if (userService.updatePassword(username, oldPassword, newPassword) == 404) {
             return ResponseEntity.status(205).body(new ResponseMessage<>(null, 0).error(205,"invalid password"));
