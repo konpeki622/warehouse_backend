@@ -23,7 +23,7 @@
 	      <value>com.mysql.jdbc.Driver</value>  
 	  </property>  
 	  <property name="url">
-	      <value>jdbc:mysql://localhost:3306/warehouse_wanglei?characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai
+	      <value>jdbc:mysql://118.89.119.230:3306/warehouse_wanglei?characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai
 		  </value>
 	
 	  </property>  
@@ -31,7 +31,7 @@
 	      <value>root</value>  
 	  </property>  
 	  <property name="password">
-	      <value>liubin2002</value>
+	      <value>maomao381</value>
 	  </property>  	
 	</bean>
 	

@@ -12,9 +12,14 @@ public class Goods {
     private Integer id;
     private Integer material_id;
     private Float material_size;
+    private Float inventory_size;
     private Integer area_id;
     private String material_name;
     private String area_name;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date material_date;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date inventory_date;
     // 记录变更信息
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date update_date;
@@ -51,6 +56,15 @@ public class Goods {
         this.material_size = material_size;
     }
 
+    @JsonProperty(value = "inventory_size")
+    public Float getInventorySize() {
+        return inventory_size;
+    }
+
+    public void setInventorySize(Float inventory_size) {
+        this.inventory_size = inventory_size;
+    }
+
     @JsonProperty(value = "area_id")
     public Integer getAreaId() {
         return area_id;
@@ -77,6 +91,16 @@ public class Goods {
     public void setAreaName(String area_name) {
         this.area_name = area_name;
     }
+
+    @JsonProperty(value = "material_date")
+    public Date getMaterialDate() { return material_date; }
+
+    public void setMaterialDate(Date material_date) { this.material_date = material_date; }
+
+    @JsonProperty(value = "inventory_date")
+    public Date getInventoryDate() { return inventory_date; }
+
+    public void setInventoryDate(Date inventory_date) { this.inventory_date = inventory_date; }
 
     @JsonProperty(value = "update_date")
     public Date getUpdateDate() { return update_date; }

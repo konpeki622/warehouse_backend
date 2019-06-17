@@ -25,6 +25,6 @@ public interface GoodsService {
     List<GoodsSum> getGoodsSellSum(Integer type, Integer id);
 
     boolean updateGoods(Integer materialId, Integer areaId, Integer goodsId, String updateDate, String deliverOwner, Float updateSize, Integer behavior, String username);
-    boolean alterGoodsSize(Integer type, Float updateSize, Integer goodsId);
+    boolean alterGoodsSize(Integer goodsId, String updateDate);
     boolean deleteGoods(Integer goodsId);
 }

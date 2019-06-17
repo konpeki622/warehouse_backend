@@ -113,8 +113,8 @@ public class GoodsController {
 
     @RequestMapping(value = {"/goods/alter"}, method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity goodsAlterController(@RequestParam("type")Integer type, @RequestParam("updateSize")Float updateSize, @RequestParam("goodsId")Integer goodsId){
-        if(goodsService.alterGoodsSize(type, updateSize, goodsId)){
+    public ResponseEntity goodsAlterController(@RequestParam("goodsId")Integer goodsId, @RequestParam(value = "update_date")String updateDate){
+        if(goodsService.alterGoodsSize(goodsId, updateDate)){
             return ResponseEntity.status(200).body(new ResponseMessage<>(null, 0).success());
         }
         return ResponseEntity.status(202).body(new ResponseMessage<>(null, 0).error(202,"failed to alter size!"));

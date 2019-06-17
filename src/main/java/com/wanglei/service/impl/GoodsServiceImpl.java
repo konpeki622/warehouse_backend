@@ -50,20 +50,25 @@ public class GoodsServiceImpl implements GoodsService {
         try {
             if (goodsId == 0) {
                 if (goodsMapper.isExist(materialId, areaId) == 0) {
-                    goodsMapper.insertGoods(materialId, areaId, updateSize);
-                    goodsId = goodsMapper.getId(materialId, areaId);
-                    goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username);
+                    if (behavior == 0) {
+                        goodsMapper.insertGoods(materialId, areaId, updateSize, updateDate);
+                        goodsId = goodsMapper.getId(materialId, areaId);
+                        goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username);
+                    }
+                    else {
+                        return false;
+                    }
                 }
                 else {
                     goodsId = goodsMapper.getId(materialId, areaId);
                     goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username);
-                    goodsMapper.updateAccount(behavior, updateSize, goodsId);
+                    goodsMapper.updateAccount(behavior, updateSize, updateDate, goodsId);
                 }
 
             }
             else {
                 goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username);
-                goodsMapper.updateAccount(behavior, updateSize, goodsId);
+                goodsMapper.updateAccount(behavior, updateSize, updateDate, goodsId);
             }
             return true;
         }
@@ -184,9 +189,9 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public boolean alterGoodsSize(Integer type, Float updateSize, Integer goodsId) {
+    public boolean alterGoodsSize(Integer goodsId, String updateDate) {
         // 0是变多 1是变少
-        goodsMapper.updateAccount(type, updateSize, goodsId);
+        goodsMapper.alterGoods(goodsId, updateDate);
         return true;
     }
 

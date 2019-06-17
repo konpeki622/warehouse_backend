@@ -52,8 +52,9 @@ public interface GoodsMapper {
 
     Integer isExist(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId);
     Integer getId(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId);
-    void insertGoods(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId, @Param("update_size")Float updateSize);
+    void insertGoods(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId, @Param("update_size")Float updateSize, @Param("update_date")String updateDate);
     void deleteGoods(Integer goodsId);
+    void alterGoods(@Param("goodsId")Integer goodsId, @Param("update_date")String updateDate);
     void insertAccount(@Param("goodsId")Integer goodsId, @Param("update_date")String updateDate, @Param("deliver_owner")String deliverOwner, @Param("update_size")Float updateSize, @Param("behavior")Integer behavior, @Param("username")String username);
-    void updateAccount(@Param("behavior")Integer behavior, @Param("update_size")Float updateSize, @Param("goodsId")Integer goodsId);
+    void updateAccount(@Param("behavior")Integer behavior, @Param("update_size")Float updateSize, @Param("update_date")String updateDate, @Param("goodsId")Integer goodsId);
 }

@@ -222,12 +222,16 @@
 	</select>
 
 	<insert id="insertGoods">
-        insert into warehouse (material_id, material_size, area_id) values (#{material_id}, #{update_size},#{area_id});
+        insert into warehouse (material_id, material_size, area_id, material_date) values (#{material_id}, #{update_size},#{area_id}, #{update_date});
     </insert>
 
 	<delete id="deleteGoods" parameterType="Integer">
         delete from warehouse where id = #{goodsId};
     </delete>
+
+	<update id="alterGoods">
+		UPDATE warehouse SET material_size = inventory_size, material_date = #{update_date} WHERE id = #{goodsId};
+	</update>
 
 	<insert id="insertAccount">
        insert into account (goods_id, update_date, deliver_owner, update_size, behavior, username) values (#{goodsId}, #{update_date}, #{deliver_owner}, #{update_size}, #{behavior}, #{username});
@@ -235,10 +239,10 @@
 
 	<update id="updateAccount">
 		<if test='behavior == 0'>
-			UPDATE warehouse SET material_size = material_size + #{update_size} WHERE id = #{goodsId};
+			UPDATE warehouse SET material_size = material_size + #{update_size}, material_date = #{update_date} WHERE id = #{goodsId};
 		</if>
 		<if test="behavior == 1">
-			UPDATE warehouse SET material_size = material_size - #{update_size} WHERE id = #{goodsId};
+			UPDATE warehouse SET material_size = material_size - #{update_size}, material_date = #{update_date} WHERE id = #{goodsId};
 		</if>
     </update>
 
