@@ -1,8 +1,6 @@
 package com.wanglei.controller;
 
-import com.wanglei.pojo.Goods;
-import com.wanglei.pojo.GoodsSum;
-import com.wanglei.pojo.ResponseMessage;
+import com.wanglei.pojo.*;
 import com.wanglei.service.GoodsService;
 import com.wanglei.util.CheckToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,13 @@ public class GoodsController {
         List<Goods> goodsList = goodsService.getGoodsList(type, keywords, page);
         Integer count = goodsService.getGoodsCount(type, keywords);
         return new ResponseMessage<>(goodsList, count).success();
+    }
+
+    @CheckToken
+    @RequestMapping(value = {"/goods/query"}, method = RequestMethod.GET)
+    public ResponseMessage goodsQueryController(@RequestParam(value = "goodsId") Integer goodsId){
+        List<ShelveInfo> goodsList = goodsService.queryGoodsShelve(goodsId);
+        return new ResponseMessage<>(goodsList, 0).success();
     }
 
     @CheckToken
@@ -94,18 +99,31 @@ public class GoodsController {
         return new ResponseMessage<>(goodsList, goodsList.size()).success();
     }
 
-    @CheckToken
     @RequestMapping(value = {"/goods/update"}, method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity goodsUpdateController(@RequestParam(value = "material_id", defaultValue = "0")Integer materialId,
                                                 @RequestParam(value = "area_id", defaultValue = "0")Integer areaId,
                                                 @RequestParam(value = "goods_id", defaultValue = "0")Integer goodsId,
-                                                @RequestParam(value = "update_date")String updateDate,
+                                                @RequestParam(value = "update_date", required = false)String updateDate,
                                                 @RequestParam(value = "deliver_owner", required = false)String deliverOwner,
-                                                @RequestParam(value = "update_size")Float updateSize,
-                                                @RequestParam(value = "behavior")Integer behavior,
-                                                @RequestParam(value = "username")String username){
-        if(goodsService.updateGoods(materialId, areaId, goodsId, updateDate, deliverOwner, updateSize, behavior, username)){
+                                                @RequestParam(value = "update_size", required = false)Float updateSize,
+                                                @RequestParam(value = "behavior", required = false)Integer behavior,
+                                                @RequestParam(value = "username", required = false)String username,
+                                                @RequestParam(value = "place", required = false)Integer place){
+        if(goodsService.updateGoods(materialId, areaId, goodsId, updateDate, deliverOwner, updateSize, behavior, username, place)){
+            return ResponseEntity.status(200).body(new ResponseMessage<>(null, 0).success());
+        }
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null, 0).error(202,"failed to update goods!"));
+    }
+
+    @RequestMapping(value = {"/goods/place"}, method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity goodsPlaceController(
+                                                @RequestParam(value = "goods_id", defaultValue = "0")Integer goodsId,
+                                                @RequestParam(value = "update_size", required = false)Float updateSize,
+                                                @RequestParam(value = "behavior", required = false)Integer behavior,
+                                                @RequestParam(value = "place", required = false)Integer place){
+        if(goodsService.updateGoodsShelve(goodsId, updateSize, behavior, place)){
             return ResponseEntity.status(200).body(new ResponseMessage<>(null, 0).success());
         }
         return ResponseEntity.status(202).body(new ResponseMessage<>(null, 0).error(202,"failed to update goods!"));
@@ -119,4 +137,43 @@ public class GoodsController {
         }
         return ResponseEntity.status(202).body(new ResponseMessage<>(null, 0).error(202,"failed to alter size!"));
     }
+
+    @RequestMapping(value = {"/shelve/get"}, method = RequestMethod.GET)
+    public ResponseMessage getShelveInfoController(@RequestParam(value = "floor", defaultValue = "0") Integer floor){
+        List<ShelveInfo> shelveList = goodsService.getShelveInfo(floor);
+        return new ResponseMessage<>(shelveList, null).success();
+    }
+
+    @RequestMapping(value = {"/shelve/recommend"}, method = RequestMethod.GET)
+    public ResponseMessage getShelveRecommendController(){
+        List<ShelveInfo> shelveList = goodsService.getShelveRecommend();
+        return new ResponseMessage<>(shelveList, null).success();
+    }
+
+    @RequestMapping(value = {"/shelve/init"}, method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity initShelveInfoController(@RequestParam(value = "rowNum") Integer rowNum, @RequestParam(value = "colNum") Integer colNum, @RequestParam(value = "floorNum") Integer floorNum, @RequestParam(value = "capacity") Integer capacity){
+        if(goodsService.initShelveInfo(rowNum, colNum, floorNum, capacity)){
+            return ResponseEntity.status(200).body(new ResponseMessage<>(null,0).success());
+        }
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null,0).error(202,"failed to init!"));
+    }
+
+    @CheckToken
+    @RequestMapping(value = {"/shelve/insert"}, method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity addShelveInfoController(@RequestParam(value = "rowNo") Integer rowNo, @RequestParam(value = "colNum") Integer colNum, @RequestParam(value = "floorNum") Integer floorNum, @RequestParam(value = "capacity") Integer capacity){
+        if(goodsService.insertShelveInfo(rowNo, colNum, floorNum, capacity)){
+            return ResponseEntity.status(200).body(new ResponseMessage<>(null,0).success());
+        }
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null,0).error(202,"failed to add!"));
+    }
+
+    @CheckToken
+    @RequestMapping(value = {"/shelve/query"}, method = RequestMethod.GET)
+    public ResponseMessage shelveQueryController(@RequestParam(value = "place") Integer place){
+        List<ShelveInfo> goodsList = goodsService.queryShelveGoods(place);
+        return new ResponseMessage<>(goodsList, 0).success();
+    }
+
 }

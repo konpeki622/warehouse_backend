@@ -9,12 +9,62 @@
         select * from userinfo inner join authinfo where userinfo.auth = authinfo.id and username = #{username};
     </select>
 
+    <select id="findById" resultType="User" parameterType="Integer">
+        select * from userinfo inner join authinfo where userinfo.auth = authinfo.id and id = #{id};
+    </select>
+
+    <select id="getUser" resultType="User">
+        select * from userinfo inner join authinfo where userinfo.auth = authinfo.id
+        <if test='auth != null'>
+            AND userinfo.auth = #{auth}
+        </if>
+        <if test='keywords != null'>
+            AND
+            <foreach collection='keywords' item='item' index='index' separator=' OR '>
+                username LIKE concat('%',#{item},'%')
+            </foreach>
+            OR
+            <foreach collection='keywords' item='item' index='index' separator=' OR '>
+                nickname LIKE concat('%',#{item},'%')
+            </foreach>
+        </if>
+        LIMIT ${(pageStart-1)*10}
+        <if test="pageEnd != null">, ${(pageEnd)*10}</if>
+        <if test="pageEnd == null">, 10</if>
+        ;
+    </select>
+
+    <select id="getUserCount" resultType="Integer" >
+        SELECT COUNT(*)
+        from userinfo inner join authinfo where userinfo.auth = authinfo.id
+        <if test='auth != null'>
+            AND userinfo.auth = #{auth}
+            <if test='keywords == null'>
+                ;
+            </if>
+        </if>
+        <if test='keywords != null'>
+            AND
+            <foreach collection='keywords' item='item' index='index' separator=' OR '>
+                username LIKE concat('%',#{item},'%')
+            </foreach>
+            OR
+            <foreach collection='keywords' item='item' index='index' separator=' OR '>
+                nickname LIKE concat('%',#{item},'%')
+            </foreach>
+            ;
+        </if>
+    </select>
+
     <insert id="insertUser">
-        insert into userinfo (username, password, auth) values (#{username}, #{password}, #{auth});
+        insert into userinfo (username, password, auth, gender, nickname, workid, email, phone) values (#{username}, #{password}, #{auth}, #{gender}, #{nickname}, #{workid}, #{email}, #{phone});
     </insert>
 
-    <update id="updatePassword">
-        update userinfo set password = #{password} where username = #{username};
+    <update id="updateUser">
+        update userinfo set password = #{password}, auth=#{auth}, nickname=#{nickname}, phone = #{phone}, email = #{email} where id = #{id};
     </update>
 
+    <delete id="deleteUser">
+        delete from userinfo where id = #{id};
+    </delete>
 </mapper>

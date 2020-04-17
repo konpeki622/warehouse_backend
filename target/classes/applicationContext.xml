@@ -20,10 +20,10 @@
 
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
 	  <property name="driverClassName">  
-	      <value>com.mysql.jdbc.Driver</value>  
-	  </property>  
+	      <value>com.mysql.cj.jdbc.Driver</value>
+	  </property>
 	  <property name="url">
-	      <value>jdbc:mysql://118.89.119.230:3306/warehouse_wanglei?characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai
+	      <value>jdbc:mysql://localhost:3306/wanglei_warehouse?characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai
 		  </value>
 	
 	  </property>  
@@ -31,7 +31,7 @@
 	      <value>root</value>  
 	  </property>  
 	  <property name="password">
-	      <value>maomao381</value>
+	      <value>mmmao381</value>
 	  </property>  	
 	</bean>
 	
@@ -56,7 +56,6 @@
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.wanglei.mapper"/>
 	</bean>
-	
 
 
 </beans>

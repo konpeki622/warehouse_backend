@@ -2,6 +2,8 @@ package com.wanglei.mapper;
 
 import com.wanglei.pojo.Goods;
 import com.wanglei.pojo.GoodsSum;
+import com.wanglei.pojo.Inventory;
+import com.wanglei.pojo.ShelveInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -50,11 +52,24 @@ public interface GoodsMapper {
     List<GoodsSum> getSellSumByMaterial(@Param("materialId")Integer materialId);
     List<GoodsSum> getSellSumByArea(@Param("areaId")Integer areaId);
 
+    List<ShelveInfo> queryGoodsShelve(@Param("goods_id")Integer goodsId);
+    List<ShelveInfo> queryShelveGoods(@Param("place")Integer place);
+
     Integer isExist(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId);
     Integer getId(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId);
     void insertGoods(@Param("material_id")Integer materialId, @Param("area_id")Integer areaId, @Param("update_size")Float updateSize, @Param("update_date")String updateDate);
     void deleteGoods(Integer goodsId);
     void alterGoods(@Param("goodsId")Integer goodsId, @Param("update_date")String updateDate);
-    void insertAccount(@Param("goodsId")Integer goodsId, @Param("update_date")String updateDate, @Param("deliver_owner")String deliverOwner, @Param("update_size")Float updateSize, @Param("behavior")Integer behavior, @Param("username")String username);
+    void insertAccount(@Param("goodsId")Integer goodsId, @Param("update_date")String updateDate, @Param("deliver_owner")String deliverOwner, @Param("update_size")Float updateSize, @Param("behavior")Integer behavior, @Param("username")String username, @Param("place")Integer place);
     void updateAccount(@Param("behavior")Integer behavior, @Param("update_size")Float updateSize, @Param("update_date")String updateDate, @Param("goodsId")Integer goodsId);
+    void placeAccount(@Param("goodsId")Integer goodsId, @Param("place")Integer place);
+
+    List<ShelveInfo> getShelveInfo(@Param("floor")Integer floor);
+    List<ShelveInfo> getShelveRecommend();
+    void insertShelveInfo(@Param("row")Integer row, @Param("col")Integer col, @Param("floor")Integer floor, @Param("capacity")Integer capacity, @Param("name")String name);
+
+    Integer isExistShelve(@Param("goods_id")Integer goodsId, @Param("place")Integer place);
+    Integer getIdShelve(@Param("goods_id")Integer goodsId, @Param("place")Integer place);
+    void insertShelve(@Param("goods_id")Integer goodsId, @Param("place")Integer place, @Param("update_size")Float updateSize);
+    void updateShelve(@Param("behavior")Integer behavior, @Param("update_size")Float updateSize, @Param("id")Integer id);
 }

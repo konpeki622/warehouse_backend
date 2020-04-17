@@ -59,7 +59,7 @@
     <select id="getStoreAll" resultType="Goods" >
 	    SELECT *
 	    FROM account INNER JOIN warehouse_view
-	    WHERE account.goods_id = warehouse_view.id AND account.behavior = 0
+	    WHERE account.goods_id = warehouse_view.id AND account.behavior = 0 AND ISNULL(place)
 		<if test='goodsId != 0'>
 			AND warehouse_view.id = #{goodsId}
 		</if>
@@ -234,7 +234,12 @@
 	</update>
 
 	<insert id="insertAccount">
-       insert into account (goods_id, update_date, deliver_owner, update_size, behavior, username) values (#{goodsId}, #{update_date}, #{deliver_owner}, #{update_size}, #{behavior}, #{username});
+		<if test='behavior == 0'>
+			insert into account (goods_id, update_date, deliver_owner, update_size, behavior, username, place) values (#{goodsId}, #{update_date}, #{deliver_owner}, #{update_size}, #{behavior}, #{username}, #{place});
+		</if>
+		<if test='behavior == 1'>
+			insert into account (goods_id, update_date, deliver_owner, update_size, behavior, username, place) values (#{goodsId}, #{update_date}, #{deliver_owner}, #{update_size}, #{behavior}, #{username}, #{place});
+		</if>
     </insert>
 
 	<update id="updateAccount">
@@ -245,6 +250,49 @@
 			UPDATE warehouse SET material_size = material_size - #{update_size}, material_date = #{update_date} WHERE id = #{goodsId};
 		</if>
     </update>
+
+	<insert id="placeAccount">
+		 UPDATE account SET place = #{place} WHERE goods_id = #{goodsId};
+	</insert>
+
+	<select id="isExistShelve" resultType="Integer">
+		SELECT COUNT(*) AS result
+		FROM inventory
+		WHERE goods_id = #{goods_id} AND place = #{place};
+	</select>
+
+	<select id="getIdShelve" resultType="Integer">
+		SELECT id AS result
+		FROM inventory
+		WHERE goods_id = #{goods_id} AND place = #{place};
+	</select>
+
+	<select id="queryGoodsShelve" resultType="ShelveInfo" >
+		SELECT *
+		FROM inventory
+	    JOIN shelve ON shelve.id = inventory.place
+	    WHERE goods_id = #{goods_id};
+	</select>
+
+	<select id="queryShelveGoods" resultType="ShelveInfo" >
+		SELECT *
+		FROM inventory
+		JOIN warehouse_view ON inventory.goods_id = warehouse_view.id
+		WHERE place = #{place};
+	</select>
+
+	<insert id="insertShelve">
+		insert into inventory (goods_id, place, occupy) values (#{goods_id}, #{place}, #{update_size});
+	</insert>
+
+	<update id="updateShelve">
+		<if test='behavior == 0'>
+			UPDATE inventory SET occupy = occupy + #{update_size} WHERE id = #{id};
+		</if>
+		<if test="behavior == 1">
+			UPDATE inventory SET occupy = occupy - #{update_size} WHERE id = #{id};
+		</if>
+	</update>
 
 	<select id="getAccountToday" resultType="Goods">
 		SELECT * FROM account INNER JOIN warehouse_view
@@ -435,5 +483,27 @@
 		WHERE account.goods_id = warehouse_view.id AND material_id= #{materialId}
 		GROUP BY account.behavior;
 	</select>
+
+	<select id="getShelveInfo" resultType="ShelveInfo" >
+		SELECT *
+		FROM shelve
+	    LEFT JOIN ( SELECT SUM( occupy ) AS occupy, place AS id FROM inventory GROUP BY place ) AS e ON shelve.id = e.id
+        WHERE floor = #{floor};
+	</select>
+
+	<select id="getShelveRecommend" resultType="ShelveInfo" >
+		SELECT *
+		FROM shelve
+	    LEFT JOIN ( SELECT SUM( occupy ) AS occupy, place AS id FROM inventory GROUP BY place ) AS e ON shelve.id = e.id
+	    ORDER BY occupy, shelve.id;
+	</select>
+
+	<insert id="insertShelveInfo" keyProperty="id" useGeneratedKeys="true">
+		insert into shelve (rowNo, col, floor, capacity, space_name) values (#{row}, #{col}, #{floor}, #{capacity}, #{name});
+		<selectKey resultType="Integer" keyProperty="id" order="AFTER">
+			select @@IDENTITY
+		</selectKey>
+	</insert>
+
 
 </mapper>

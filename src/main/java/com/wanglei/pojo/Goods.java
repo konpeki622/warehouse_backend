@@ -28,6 +28,7 @@ public class Goods {
     private Float update_size;
     private Integer behavior;
     private String username;
+    private Integer place;
 
     @JsonProperty(value = "id")
     public Integer getId() {
@@ -151,4 +152,13 @@ public class Goods {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    @JsonProperty(value = "place")
+    public Integer getPlace() {
+        return place;
+    }
+    public void setPlace(Integer place) {
+        this.place = place;
+    }
+
 }

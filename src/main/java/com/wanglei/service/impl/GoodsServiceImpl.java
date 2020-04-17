@@ -3,6 +3,8 @@ package com.wanglei.service.impl;
 import com.wanglei.mapper.GoodsMapper;
 import com.wanglei.pojo.Goods;
 import com.wanglei.pojo.GoodsSum;
+import com.wanglei.pojo.Inventory;
+import com.wanglei.pojo.ShelveInfo;
 import com.wanglei.service.GoodsService;
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,30 +48,63 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public boolean updateGoods(Integer materialId, Integer areaId, Integer goodsId, String updateDate, String deliverOwner, Float updateSize, Integer behavior, String username) {
+    public boolean updateGoods(Integer materialId, Integer areaId, Integer goodsId, String updateDate, String deliverOwner, Float updateSize, Integer behavior, String username, Integer place) {
         try {
+            // 没传goodsid
             if (goodsId == 0) {
                 if (goodsMapper.isExist(materialId, areaId) == 0) {
                     if (behavior == 0) {
                         goodsMapper.insertGoods(materialId, areaId, updateSize, updateDate);
                         goodsId = goodsMapper.getId(materialId, areaId);
-                        goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username);
+                        goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username, place);
                     }
                     else {
                         return false;
                     }
                 }
                 else {
-                    goodsId = goodsMapper.getId(materialId, areaId);
-                    goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username);
-                    goodsMapper.updateAccount(behavior, updateSize, updateDate, goodsId);
+                        if (behavior == 0) {
+                            goodsId = goodsMapper.getId(materialId, areaId);
+                            goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username, place);
+                            goodsMapper.updateAccount(behavior, updateSize, updateDate, goodsId);
+                        }
+                        else {
+                            goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username, place);
+                            goodsMapper.updateAccount(behavior, updateSize, updateDate, goodsId);
+                        }
                 }
 
             }
+            // 传了goodsid
             else {
-                goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username);
-                goodsMapper.updateAccount(behavior, updateSize, updateDate, goodsId);
+                        goodsMapper.insertAccount(goodsId, updateDate, deliverOwner, updateSize, behavior, username, place);
+                        goodsMapper.updateAccount(behavior, updateSize, updateDate, goodsId);
             }
+            return true;
+        }
+        catch (Error e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateGoodsShelve(Integer goodsId, Float updateSize, Integer behavior, Integer place) {
+        try {
+            if (behavior == 0) {
+                goodsMapper.placeAccount(goodsId, place);
+            }
+                if (goodsMapper.isExistShelve(goodsId, place) == 0) {
+                    if (behavior == 0) {
+                        goodsMapper.insertShelve(goodsId, place, updateSize);
+                    }
+                    else {
+                        return false;
+                    }
+                }
+                else {
+                    Integer shelveId = goodsMapper.getIdShelve(goodsId, place);
+                    goodsMapper.updateShelve(behavior, updateSize, shelveId);
+                }
             return true;
         }
         catch (Error e) {
@@ -199,5 +234,62 @@ public class GoodsServiceImpl implements GoodsService {
     public boolean deleteGoods(Integer goodsId) {
         goodsMapper.deleteGoods(goodsId);
         return true;
+    }
+
+    @Override
+    public List<ShelveInfo> getShelveInfo(Integer floor) {
+        return goodsMapper.getShelveInfo(floor);
+    }
+
+    @Override
+    public List<ShelveInfo> getShelveRecommend() {
+        return goodsMapper.getShelveRecommend();
+    }
+
+    @Override
+    public boolean initShelveInfo(Integer rowNum, Integer colNum, Integer floorNum, Integer capacity) {
+        if (rowNum > 26) return false;
+        Integer rowNo;
+        Integer colNo;
+        Integer floorNo;
+        for (rowNo = 1;rowNo <= rowNum; rowNo++) {
+            for (colNo = 1; colNo <= colNum; colNo++) {
+                for (floorNo = 1; floorNo <= floorNum; floorNo++) {
+                    char rowName = (char) ((rowNo - 1) % 26 + (int) 'A');
+                    String colName = String.valueOf(colNo);
+                    String floorName = String.valueOf(floorNo);
+                    String name = rowName + "-" + colName + "-" + floorName;
+                    goodsMapper.insertShelveInfo(rowNo, colNo, floorNo, capacity, name);
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean insertShelveInfo(Integer rowNo, Integer colNum, Integer floorNum, Integer capacity) {
+        if (rowNo > 26) return false;
+        Integer colNo;
+        Integer floorNo;
+        for (colNo = 1; colNo <= colNum; colNo++) {
+            for (floorNo = 1; floorNo <= floorNum; floorNo++) {
+                char rowName = (char) ((rowNo - 1) % 26 + (int) 'A');
+                char colName = (char) (colNo % 27);
+                char floorName = (char) (floorNo % 27);
+                String name = rowName + "-" + colName + "-" + floorName;
+                goodsMapper.insertShelveInfo(rowNo, colNo, floorNo, capacity, name);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public List<ShelveInfo> queryGoodsShelve(Integer goodsId) {
+        return goodsMapper.queryGoodsShelve(goodsId);
+    }
+
+    @Override
+    public List<ShelveInfo> queryShelveGoods(Integer place) {
+        return goodsMapper.queryShelveGoods(place);
     }
 }

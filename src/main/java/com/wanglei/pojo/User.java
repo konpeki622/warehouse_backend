@@ -10,6 +10,11 @@ public class User {
     private String username;
     private String password;
     private Integer auth;
+    private String gender;
+    private String nickname;
+    private String workid;
+    private String email;
+    private String phone;
     private String auth_name;
     private Integer menu_id;
 
@@ -47,6 +52,46 @@ public class User {
 
     public void setAuth(Integer auth) {
         this.auth = auth;
+    }
+
+    @JsonProperty(value = "gender")
+    public String getGender() {
+        return this.gender;
+    }
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    @JsonProperty(value = "nickname")
+    public String getNickname() {
+        return this.nickname;
+    }
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    @JsonProperty(value = "workid")
+    public String getWorkId() {
+        return this.workid;
+    }
+    public void setWorkId(String workid) {
+        this.workid = workid;
+    }
+
+    @JsonProperty(value = "email")
+    public String getEmail() {
+        return this.email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @JsonProperty(value = "phone")
+    public String getPhone() {
+        return this.phone;
+    }
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @JsonProperty(value = "auth_name")

@@ -2,6 +2,8 @@ package com.wanglei.service;
 
 import com.wanglei.pojo.Goods;
 import com.wanglei.pojo.GoodsSum;
+import com.wanglei.pojo.Inventory;
+import com.wanglei.pojo.ShelveInfo;
 
 import java.util.List;
 
@@ -24,7 +26,16 @@ public interface GoodsService {
     List<GoodsSum> getGoodsSumByMaterial(Integer type);
     List<GoodsSum> getGoodsSellSum(Integer type, Integer id);
 
-    boolean updateGoods(Integer materialId, Integer areaId, Integer goodsId, String updateDate, String deliverOwner, Float updateSize, Integer behavior, String username);
+    List<ShelveInfo> queryGoodsShelve(Integer goodsId);
+    List<ShelveInfo> queryShelveGoods(Integer place);
+
+    boolean updateGoods(Integer materialId, Integer areaId, Integer goodsId, String updateDate, String deliverOwner, Float updateSize, Integer behavior, String username, Integer place);
+    boolean updateGoodsShelve(Integer goodsId, Float updateSize, Integer behavior, Integer place);
     boolean alterGoodsSize(Integer goodsId, String updateDate);
     boolean deleteGoods(Integer goodsId);
+
+    List<ShelveInfo> getShelveInfo(Integer floor);
+    List<ShelveInfo> getShelveRecommend();
+    boolean initShelveInfo(Integer rowNum, Integer colNum, Integer floorNum, Integer capacity);
+    boolean insertShelveInfo(Integer rowNo, Integer colNum, Integer floorNum, Integer capacity);
 }
